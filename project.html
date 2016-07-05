@@ -171,6 +171,7 @@ var currentColor = [1,1,1,1];   // The current diffuseColor; render() functions 
                                 // Other color properties, which don't change often are handled elsewhere.
 
 var sunAngle = Math.PI/2; // rotation of the sun about the z-axis.
+var rotAngle = Math.PI/2; // rotation of the sun about the z-axis.
 var daytime = true;
 
 /**
@@ -201,17 +202,11 @@ function lights() {
     mat4.rotate(modelview,modelview,sunAngle,[0,1,0]);
     mat4.translate(modelview,modelview,[6.5,0,0]);
     mat4.scale(modelview,modelview,[0.4,0.4,0.4]);
-    if (daytime) { 
-        gl.uniform3f( u_material.emissiveColor, 0.7, 0.7, 0 );
-        gl.uniform1f( u_lights[1].enabled, 1 );
-    }
-    else {
-        gl.uniform3f(u_material.emissiveColor, 0.1, 0.1, 0.1 );
-        gl.uniform1f( u_lights[1].enabled, 0 );
-    }
+    gl.uniform3f( u_material.emissiveColor, 0.7, 0.7, 0 );
+    gl.uniform1f( u_lights[1].enabled, 1 );
 	pushMatrix();
-	mat4.rotate(modelview,modelview,sunAngle,[1,1,0]);
-    cube.render();
+	mat4.rotate(modelview,modelview,rotAngle,[0,1,0]);
+    sphere.render();
 	popMatrix();
     gl.uniform3f( u_material.emissiveColor, 0, 0, 0 );
     popMatrix();
@@ -422,10 +417,12 @@ function frame() {
         frameNumber += 1;
         /*----- Adding the movement of the sun -----*/
         sunAngle += Math.PI/360;
+		rotAngle += Math.PI/36;
+		
         if (sunAngle > 2*Math.PI) {
             sunAngle -= 2*Math.PI;
         }
-        daytime = sunAngle < Math.PI;
+        
         draw();
         requestAnimationFrame(frame);
     }
