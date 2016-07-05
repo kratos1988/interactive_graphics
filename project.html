@@ -135,9 +135,9 @@
 </script>
 
 
-<script type="text/javascript" src="gl-matrix.js"></script>
-<script type="text/javascript" src="basic-objects.js"></script>
-<script type="text/javascript" src="simple-rotator.js"></script>
+<script type="text/javascript" src="libs/gl-matrix.js"></script>
+<script type="text/javascript" src="libs/basic-objects.js"></script>
+<script type="text/javascript" src="libs/simple-rotator.js"></script>
 <script>
 
 "use strict";
@@ -203,7 +203,6 @@ function lights() {
     mat4.scale(modelview,modelview,[0.4,0.4,0.4]);
     if (daytime) { 
         gl.uniform3f( u_material.emissiveColor, 0.7, 0.7, 0 );
-        setLightPosition(u_lights[1].position, modelview, [1,0,0,0]);
         gl.uniform1f( u_lights[1].enabled, 1 );
     }
     else {
