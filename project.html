@@ -198,7 +198,7 @@ function lights() {
     currentColor = [ 0.3, 0.3, 0.3, 1 ];
     
     pushMatrix();  // draw the sun, with yellow emissive color during the day; sun won't be illuminated by other lights
-    mat4.rotate(modelview,modelview,sunAngle,[0,0,1]);
+    mat4.rotate(modelview,modelview,sunAngle,[0,1,0]);
     mat4.translate(modelview,modelview,[6.5,0,0]);
     mat4.scale(modelview,modelview,[0.4,0.4,0.4]);
     if (daytime) { 
@@ -209,7 +209,10 @@ function lights() {
         gl.uniform3f(u_material.emissiveColor, 0.1, 0.1, 0.1 );
         gl.uniform1f( u_lights[1].enabled, 0 );
     }
-    sphere.render();
+	pushMatrix();
+	mat4.rotate(modelview,modelview,sunAngle,[1,1,0]);
+    cube.render();
+	popMatrix();
     gl.uniform3f( u_material.emissiveColor, 0, 0, 0 );
     popMatrix();
 }
