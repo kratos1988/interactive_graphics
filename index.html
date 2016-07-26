@@ -1,73 +1,34 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-	<head>	
-		<script src="./js/three.min.js"></script>
-		<script src="./js/OrbitControls.js"></script>
-	</head>
-	<body>
-		<script>
-			var scene, camera, renderer;
-			var onRenderFcts = [];
-			scene = new THREE.Scene();
-			var WIDTH = window.innerWidth,
-				HEIGHT = window.innerHeight;
-			var onRenderFcts = [];
-				
-			// Create a renderer and add it to the DOM.
-			renderer = new THREE.WebGLRenderer({antialias:true});
-			renderer.setSize(WIDTH, HEIGHT);
-			document.body.appendChild(renderer.domElement);
-				
-			// Create a camera, zoom it out from the model a bit, and add it to the scene.
-			camera = new THREE.PerspectiveCamera(45, WIDTH / HEIGHT, 0.1, 20000);
-			camera.position.set(0,0,1.5);
-			scene.add(camera);
-				
-			// Create an event listener that resizes the renderer with the browser window.
-			window.addEventListener('resize', function() {
-				var WIDTH = window.innerWidth,
-					HEIGHT = window.innerHeight;
-				renderer.setSize(WIDTH, HEIGHT);
-				camera.aspect = WIDTH / HEIGHT;
-				camera.updateProjectionMatrix();
-			});
-				
-			// Create a light, set its position, ansd add it to the scene.
-			var light = new THREE.DirectionalLight(0xffffff);
-			light.position.set(5,3,5);
-			scene.add(light);
-				
-			var geometry   = new THREE.SphereGeometry(0.5, 32, 32);
-			var material  = new THREE.MeshPhongMaterial();
-			var earthMesh = new THREE.Mesh(geometry, material);
-			scene.add(earthMesh);
-			onRenderFcts.push(function(delta, now){
-				earthMesh.rotation.y  += 1/32 * delta
-			});
-				
-			material.map    = THREE.ImageUtils.loadTexture('img/earthmap1k.jpg');
-			material.bumpMap    = THREE.ImageUtils.loadTexture('img/earthbump1k.jpg');
-			material.bumpScale = 0.05;
-			material.specularMap    = THREE.ImageUtils.loadTexture('img/earthspec1k.jpg')
-			material.specular  = new THREE.Color('grey')
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive graphic Final Project</title>
+    <style>
 
-			onRenderFcts.push(function(){
-				renderer.render(scene, camera);
-			})
-				
-			var lastTimeMsec = null;
-			
-			requestAnimationFrame(function animate(nowMsec) {
-				//keep looping
-				requestAnimationFrame(animate);
-				lastTimeMsec = lastTimeMsec || nowMsec-1000/60;
-				var deltaMsec = Math.min(200, nowMsec - lastTimeMsec);
-				lastTimeMsec = nowMsec;
-				onRenderFcts.forEach(function(onRenderFct) {
-					onRenderFct(deltaMsec/1000, nowMsec/1000);
-				})
-			})
-			
-		</script>
-	</body>
+        body { margin: 10px; overflow: hidden; background-color: #000; }
+        .tm  { position: absolute; top: 30px; right: 10px; left:10px; bottom: 10px}
+        .webgl-error { font: 15px/30px monospace; text-align: center; color: #fff; margin: 50px; }
+        .webgl-error a { color: #fff; }
+        .webgl {}
+        h1   {
+            border:1px solid white;
+            background-color:gray;
+            text-align: center;
+            color:white;font-family:verdana;font-size:100%;}
+    </style>
+</head>
+<body>
+
+
+<input type=button onClick="location.href='index1.html'" value='Earth'>
+
+
+    <div id="webgl">
+    <script src="js/three.min.js"></script>
+    <script src="js/Detector.js"></script>
+    <script src="js/TrackballControls.js"></script>
+    <script src="js/solarsystem.js"></script>
+    </div>
+</body>
 </html>
