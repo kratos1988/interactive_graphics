@@ -22,7 +22,7 @@
 	var camera = new THREE.PerspectiveCamera(45, width / height, 0.01, 1000);
 	camera.position.z = 100;
 	camera.position.y = 5;
-camera.position.x = 100;
+	camera.position.x = 100;
 	var renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
 	renderer.setSize(width, height);
 
@@ -184,6 +184,29 @@ camera.position.x = 100;
     scene.add(lensFlare);
 	var stars = createStars(120, 100);
 	scene.add(stars);
+	
+	var spaceship = null
+
+	var mtlLoader = new THREE.MTLLoader();
+	mtlLoader.setPath( 'models/' );
+	mtlLoader.load( 'Shuttle01.mtl', function( materials ) {
+
+		materials.preload();
+
+		var objLoader = new THREE.OBJLoader();
+		objLoader.setMaterials( materials );
+		objLoader.setPath( 'models/' );
+		objLoader.load( 'Shuttle01.obj', function ( object ) {
+
+			object.position.x=starting+55;
+			object.position.y = 0;
+			object.position.z = 5;
+			object.scale.x = 0.01;
+			object.scale.y = 0.01;
+			object.scale.z = 0.01;
+			scene.add( object );
+		});
+	});
 
 	var controls = new THREE.TrackballControls(camera);
 
