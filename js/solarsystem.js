@@ -276,8 +276,8 @@
 		return new THREE.Mesh(
 			new THREE.SphereGeometry(radius, segments, segments),
 			new THREE.MeshPhongMaterial({
-				map:         THREE.ImageUtils.loadTexture('images/jupiter2_1k.jpg'),
-				bumpMap:     THREE.ImageUtils.loadTexture('images/elev_bump_4k.jpeg'),
+				map:         THREE.ImageUtils.loadTexture('images/jupiter.jpg'),
+			
 			})
 		);
 	}
