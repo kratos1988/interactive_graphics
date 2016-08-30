@@ -43,8 +43,8 @@
 //	clouds.position.set(0,45,0);
 	clouds.position.x=starting+10;
 	scene.add(clouds);
-	var tgeometry = new THREE.TorusGeometry(starting+10, 0.001,5,100);
-    var tmaterial = new THREE.MeshBasicMaterial( { color: 0x000000 } ); // color of plane
+	var tgeometry = new THREE.TorusGeometry(starting+10, 0.007,5,100);
+    var tmaterial = new THREE.MeshBasicMaterial( { color: 0xFFFFFF } ); // color of plane
     var torus = new THREE.Mesh( tgeometry, tmaterial );
     torus.rotation.x=0.5*Math.PI;
     torus.position.x=0;
@@ -61,7 +61,7 @@
 
 	//clouds_venus.position.set(0,10,0);
 	clouds_venus.position.x=starting+15;
-	var tgeometry_venus = new THREE.TorusGeometry(starting+15, 0.001,5,100);
+	var tgeometry_venus = new THREE.TorusGeometry(starting+15, 0.007,5,100);
 	var torus_venus = new THREE.Mesh(tgeometry_venus, tmaterial );
     torus_venus.rotation.x=0.5*Math.PI;
     torus_venus.position.x=0;
@@ -75,7 +75,7 @@
 	var clouds_earth = createClouds(radius/3.5, segments);
 	clouds_earth.rotation.y = rotation;
 	clouds_earth.position.x=starting+20;
-	var tgeometry_earth = new THREE.TorusGeometry(starting+20, 0.001,5,100);
+	var tgeometry_earth = new THREE.TorusGeometry(starting+20, 0.03,5,100);
 	var torus_earth = new THREE.Mesh(tgeometry_earth, tmaterial );
     torus_earth.rotation.x=0.5*Math.PI;
     torus_earth.position.x=0;
@@ -87,7 +87,7 @@
     var mars = createmars(radius/3.2, segments);
     mars.position.x=starting+25;
     mars.rotation.x =-0.5*Math.PI;
-	var tgeometry_mars = new THREE.TorusGeometry(starting+25, 0.001,5,100);
+	var tgeometry_mars = new THREE.TorusGeometry(starting+25, 0.007,5,100);
 	var torus_mars = new THREE.Mesh(tgeometry_mars, tmaterial );
     torus_mars.position.x=0;
     torus_mars.rotation.x=0.5*Math.PI;
@@ -101,7 +101,7 @@
 	var clouds_jupiter = createClouds(radius, segments);
 	clouds_jupiter.rotation.y = rotation;
 	clouds_jupiter.position.x=starting+35;
-	var tgeometry_jupiter = new THREE.TorusGeometry(starting+35, 0.001,5,100);
+	var tgeometry_jupiter = new THREE.TorusGeometry(starting+35, 0.007,5,100);
 	var torus_jupiter = new THREE.Mesh(tgeometry_jupiter, tmaterial );
     torus_jupiter.rotation.x=0.5*Math.PI;
     torus_jupiter.position.x=0;
@@ -124,7 +124,7 @@
     saturn.rotation.x =-0.5*Math.PI;
     saturn.add(circle);
     saturn.add(circle2);
-	var tgeometry_saturn = new THREE.TorusGeometry(starting+45, 0.001,5,100);
+	var tgeometry_saturn = new THREE.TorusGeometry(starting+45, 0.007,5,100);
 	var torus_saturn = new THREE.Mesh(tgeometry_saturn, tmaterial );
     torus_saturn.position.x=0;
     torus_saturn.rotation.x=0.5*Math.PI;
@@ -148,7 +148,7 @@
     uranus.rotation.x =-0.5*Math.PI;
     uranus.add(U_circle);
     uranus.add(U_circle2);
-	var tgeometry_uranus = new THREE.TorusGeometry(starting+55, 0.001,5,100);
+	var tgeometry_uranus = new THREE.TorusGeometry(starting+55, 0.007,5,100);
 	var torus_uranus = new THREE.Mesh(tgeometry_uranus, tmaterial );
     torus_uranus.position.x=0;
     torus_uranus.rotation.x=0.5*Math.PI;
@@ -160,7 +160,7 @@
     var neptune = createneptune(radius/3.2, segments);
     neptune.position.x=starting+65;
     neptune.rotation.x =-0.5*Math.PI;
-	var tgeometry_neptune = new THREE.TorusGeometry(starting+65, 0.001,5,100);
+	var tgeometry_neptune = new THREE.TorusGeometry(starting+65, 0.007,5,100);
 	var torus_neptune = new THREE.Mesh(tgeometry_neptune, tmaterial );
     torus_neptune.position.x=0;
     torus_neptune.rotation.x=0.5*Math.PI;
