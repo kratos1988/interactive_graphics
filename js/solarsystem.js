@@ -1,4 +1,4 @@
-// Created by Bjorn Sandvik - thematicmapping.org
+
 (function () {
 
 	var webglEl = document.getElementById('webgl');
@@ -161,7 +161,7 @@
     neptune.position.x=starting+65;
     neptune.rotation.x =-0.5*Math.PI;
 	var tgeometry_neptune = new THREE.TorusGeometry(starting+65, 0.007,5,100);
-	var torus_neptune = new THREE.Mesh(tgeometry_neptune, tmaterial );
+	var torus_neptune = new THREE.Mesh(tgeometry_neptune, tmaterial );2
     torus_neptune.position.x=0;
     torus_neptune.rotation.x=0.5*Math.PI;
     torus_neptune.add(neptune)
@@ -184,29 +184,67 @@
     scene.add(lensFlare);
 	var stars = createStars(120, 100);
 	scene.add(stars);
-	
-	var spaceship = null
 
+	//var spaceship = null
 	var mtlLoader = new THREE.MTLLoader();
 	mtlLoader.setPath( 'models/' );
-	mtlLoader.load( 'Shuttle01.mtl', function( materials ) {
-
-		materials.preload();
-
+	mtlLoader.load( 'Shuttle01.mtl', function( materials ) {//	materials.preload();
 		var objLoader = new THREE.OBJLoader();
 		objLoader.setMaterials( materials );
 		objLoader.setPath( 'models/' );
 		objLoader.load( 'Shuttle01.obj', function ( object ) {
 
-			object.position.x=starting+55;
-			object.position.y = 0;
-			object.position.z = 5;
-			object.scale.x = 0.01;
-			object.scale.y = 0.01;
-			object.scale.z = 0.01;
-			scene.add( object );
-		});
-	});
+			object.position.x =starting+75;
+		//	object.position.y = 0.09;
+			//object.position.z = 5;
+			object.scale.x = 0.008;
+			object.scale.y = 0.008;
+			object.scale.z = 0.008;
+object.rotation.x = 5;
+			var tgeometry11 = new THREE.TorusGeometry(starting+75, 0.001,5,100);
+				var tmaterial11 = new THREE.MeshBasicMaterial( { color: 0x000000 } ); // color of plane
+				var torus11 = new THREE.Mesh( tgeometry11, tmaterial11 );
+			torus11.rotation.x=0.41*Math.PI;
+			torus11.position.x=0;
+torus11.position.z=15;
+
+		//	torus.add(sphere);
+			torus11.add(object);
+			scene.add( torus11 );
+
+			//scene.add( object );
+
+
+
+
+			//var spaceship = null
+			var mtlLoader = new THREE.MTLLoader();
+			mtlLoader.setPath( 'models/' );
+			mtlLoader.load( 'Shuttle01.mtl', function( materials ) {//	materials.preload();
+				var objLoader = new THREE.OBJLoader();
+				objLoader.setMaterials( materials );
+				objLoader.setPath( 'models/' );
+				objLoader.load( 'Shuttle01.obj', function ( object2 ) {
+
+					object2.position.x =starting+40;
+				//	object.position.y = 0.09;
+					object.position.z = 5;
+					object2.scale.x = 0.008;
+					object2.scale.y = 0.008;
+					object2.scale.z = 0.008;
+			object2.rotation.x = 5;
+					var tgeometry12 = new THREE.TorusGeometry(starting+40, 0.001,5,100);
+						var tmaterial12 = new THREE.MeshBasicMaterial( { color: 0x000000 } ); // color of plane
+						var torus12 = new THREE.Mesh( tgeometry12, tmaterial12 );
+					torus12.rotation.x=0.4*Math.PI;
+					torus12.position.x=0;
+
+
+				//	torus.add(sphere);
+					torus12.add(object2);
+					scene.add( torus12 );
+
+					//scene.add( object );
 
 	var controls = new THREE.TrackballControls(camera);
 
@@ -216,6 +254,12 @@
 	function render() {
 		var speed=0.001;
 		controls.update();
+
+		object2.position.z +=0.01;
+		torus12.rotation.z +=0.009;
+
+		object.position.z -=0.005;
+		torus11.rotation.z +=0.005;
 		sphere.rotation.z += 0.01;
 		torus.rotation.z+=speed;
 		clouds.rotation.z += 0.01;
@@ -244,6 +288,14 @@
 		requestAnimationFrame(render);
 		renderer.render(scene, camera);
 	}
+});
+
+		});
+});
+
+		});
+
+
 	function createSphere(radius, segments) {
 		return new THREE.Mesh(
 			new THREE.SphereGeometry(radius, segments, segments),
@@ -277,7 +329,7 @@
 			new THREE.SphereGeometry(radius, segments, segments),
 			new THREE.MeshPhongMaterial({
 				map:         THREE.ImageUtils.loadTexture('images/jupiter.jpg'),
-			
+
 			})
 		);
 	}
