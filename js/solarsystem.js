@@ -1,4 +1,4 @@
-
+// Created by Bjorn Sandvik - thematicmapping.org
 (function () {
 
 	var webglEl = document.getElementById('webgl');
@@ -19,7 +19,7 @@
 
 	var scene = new THREE.Scene();
 
-	var camera = new THREE.PerspectiveCamera(45, width / height, 0.01, 1000);
+	var camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 1000);
 	camera.position.z = 100;
 	camera.position.y = 5;
 	camera.position.x = 100;
@@ -185,18 +185,19 @@
 	var stars = createStars(120, 100);
 	scene.add(stars);
 
+var keyboard  = new THREEx.KeyboardState();
 	//var spaceship = null
 	var mtlLoader = new THREE.MTLLoader();
 	mtlLoader.setPath( 'models/' );
-	mtlLoader.load( 'Shuttle01.mtl', function( materials ) {//	materials.preload();
+	mtlLoader.load( 'Shuttle02.mtl', function( materials ) {//	materials.preload();
 		var objLoader = new THREE.OBJLoader();
 		objLoader.setMaterials( materials );
 		objLoader.setPath( 'models/' );
-		objLoader.load( 'Shuttle01.obj', function ( object ) {
+		objLoader.load( 'Shuttle02.obj', function ( object ) {
 
-			object.position.x =starting+75;
-		//	object.position.y = 0.09;
-			//object.position.z = 5;
+			object.position.x =starting+50;
+			object.position.y = 50;
+			//object.position.z = -190;
 			object.scale.x = 0.008;
 			object.scale.y = 0.008;
 			object.scale.z = 0.008;
@@ -246,6 +247,10 @@ torus11.position.z=15;
 
 					//scene.add( object );
 
+
+
+
+
 	var controls = new THREE.TrackballControls(camera);
 
 	webglEl.appendChild(renderer.domElement);
@@ -255,11 +260,66 @@ torus11.position.z=15;
 		var speed=0.001;
 		controls.update();
 
+
+		if(keyboard.pressed("a")) {
+				object.position.y += 0.099;
+				object.rotation.y -=0.005;
+
+			//	camera.rotation.z = object.rotation.z;
+			//	camera.rotation.y = object.rotation.y;
+			//	camera.rotation.x = object.rotation.x;
+				camera.position.z += 0.100;
+
+		}
+		if(keyboard.pressed("d")) {
+				object.position.y -= 0.099;
+				object.rotation.y +=0.005;
+			//	camera.position.z = object.position.z-100;
+				camera.position.z -= 0.100;
+			//	camera.position.x = object.position.x-100;
+		}
+		if(keyboard.pressed("w")) {
+				object.position.z -= 0.1;
+				//camera.position.z = object.position.z+100;
+				camera.position.x -= 0.01;
+			//	camera.position.x = object.position.x-100;
+		}
+		if(keyboard.pressed("s")) {
+				object.position.z += 0.1;
+			//	camera.position.z = object.position.z+100;
+				camera.position.x += 0.01;
+		//		camera.position.x = object.position.x+100;
+		}
+
+		if(keyboard.pressed("up")) {
+			object.position.x -=0.200;
+			//	camera.position.z = object.position.z+100;
+			camera.position.x -= 0.200;
+			camera.rotation.x +=0.009;
+		//		camera.position.x = object.position.x+100;
+		}
+
+		if(keyboard.pressed("down")) {
+			object.position.x +=0.200;
+			//	camera.position.z = object.position.z+100;
+			camera.position.x += 0.200;
+			camera.rotation.x -=0.009;
+		//		camera.position.x = object.position.x+100;
+		}
+
+
+		if(keyboard.pressed("q")) {
+				object.rotation.y -=0.009;
+		}
+		if(keyboard.pressed("e")) {
+				object.rotation.y +=0.009;
+		}
+
 		object2.position.z +=0.01;
 		torus12.rotation.z +=0.009;
 
-		object.position.z -=0.005;
-		torus11.rotation.z +=0.005;
+		object.position.x -=0.009;
+	//	torus11.rotation.z +=0.0005;
 		sphere.rotation.z += 0.01;
 		torus.rotation.z+=speed;
 		clouds.rotation.z += 0.01;
