@@ -15,11 +15,12 @@
 	var radius   = 35	,
 		segments = 30,
 		starting = 10;
-		rotation = 6;
+		rotation = 1;
 
 	var scene = new THREE.Scene();
 
 	var camera = new THREE.PerspectiveCamera(45, width / height, 0.01, 200);
+	camera.position.x = 100;
 	camera.position.z = 60;
 	camera.position.y = 45;
 
@@ -40,7 +41,7 @@
 	var clouds = createClouds(radius/5, segments);
 	clouds.rotation.y = rotation;
 	clouds.position.x=starting+10;
-	//scene.add(clouds);
+	scene.add(clouds);
 	var tgeometry = new THREE.TorusGeometry(starting+10, 0.001,5,100);
     var tmaterial = new THREE.MeshBasicMaterial( { color: 0x000000 } ); // color of plane
     var torus = new THREE.Mesh( tgeometry, tmaterial );
@@ -52,16 +53,21 @@
     var earth = createSphere(radius/1, segments);
 	earth.rotation.x =-0.5*Math.PI;
     earth.position.x=starting+2;
-	var clouds_earth = createClouds(radius/1, segments);
-	clouds_earth.rotation.y = rotation;
+	var clouds_earth = createClouds(radius*1.012, segments);
+	clouds_earth.rotation.x = 1*Math.PI;
 	clouds_earth.position.x=starting+2;
 	var tgeometry_earth = new THREE.TorusGeometry(starting+20, 0.001,5,100);
 	var torus_earth = new THREE.Mesh(tgeometry_earth, tmaterial );
     torus_earth.rotation.x=0.5*Math.PI;
     torus_earth.position.x=0;
-    //torus_earth.add(clouds_earth);
+    torus_earth.add(clouds_earth);
     torus_earth.add(earth)
     scene.add(torus_earth);
+	
+	
+	var stars = createStars(300, 100);
+	scene.add(stars);
+	
 
 	var controls = new THREE.TrackballControls(camera);
 
@@ -89,7 +95,7 @@
 			new THREE.MeshPhongMaterial({
 				map:         THREE.ImageUtils.loadTexture('images/2_no_clouds_4k.jpg'),
 					bumpMap:     THREE.ImageUtils.loadTexture('images/elev_bump_4k.jpg'),
-					bumpScale:   0.005,
+					bumpScale:   2,
 					specularMap: THREE.ImageUtils.loadTexture('images/water_4k.png'),
 					specular:    new THREE.Color('grey')
 			})
@@ -117,7 +123,7 @@
 		return new THREE.Mesh(
 			new THREE.SphereGeometry(radius, segments, segments),
 			new THREE.MeshBasicMaterial({
-				map:  THREE.ImageUtils.loadTexture('images/galaxy_starfield.png'),
+				map:  THREE.ImageUtils.loadTexture('images/stars_milkyway.jpg'),
 				side: THREE.BackSide
 			})
 		);
