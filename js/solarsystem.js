@@ -210,8 +210,8 @@
 		objLoader.setPath( 'models/' );
 		objLoader.load( 'Shuttle01.obj', function ( object ) {
 
-			object.position.x =starting+75;
-
+			object.position.x =starting+90;
+	object.position.y = 60;
 			object.scale.x = 0.008;
 			object.scale.y = 0.008;
 			object.scale.z = 0.008;
@@ -276,7 +276,7 @@ controls = new THREE.TrackballControls( camera, renderer.domElement );
 
 
 	webglEl.appendChild(renderer.domElement);
-
+var keyboard  = new THREEx.KeyboardState();
 
 
 	render();
@@ -285,15 +285,88 @@ scene.add(light);
 		var speed= controls1.rotationSpeed ; //0.001; //menu
 		controls.update();
 
-		object2.position.z +=0.01;
-		torus12.rotation.z +=0.009;
+		//object2.position.z +=0.01;
+		//torus12.rotation.z +=0.009;
 
+
+
+				if(keyboard.pressed("a")) {
+						object.position.y += 0.099;
+						object.rotation.y -=0.005;
+
+					//	camera.rotation.z = object.rotation.z;
+					//	camera.rotation.y = object.rotation.y;
+					//	camera.rotation.x = object.rotation.x;
+						camera.position.z += 0.100;
+
+				}
+				if(keyboard.pressed("d")) {
+						object.position.y -= 0.099;
+						object.rotation.y +=0.005;
+					//	camera.position.z = object.position.z-100;
+						camera.position.z -= 0.100;
+					//	camera.position.x = object.position.x-100;
+				}
+				if(keyboard.pressed("w")) {
+						object.position.z -= 0.1;
+						//camera.position.z = object.position.z+100;
+						camera.position.x -= 0.01;
+					//	camera.position.x = object.position.x-100;
+				}
+				if(keyboard.pressed("s")) {
+						object.position.z += 0.1;
+					//	camera.position.z = object.position.z+100;
+						camera.position.x += 0.01;
+				//		camera.position.x = object.position.x+100;
+				}
+
+				if(keyboard.pressed("up")) {
+					object.position.x -=0.200;
+					//	camera.position.z = object.position.z+100;
+					camera.position.x -= 0.200;
+					camera.rotation.x +=0.009;
+				//		camera.position.x = object.position.x+100;
+				}
+
+				if(keyboard.pressed("down")) {
+					object.position.x +=0.200;
+					//	camera.position.z = object.position.z+100;
+					camera.position.x += 0.200;
+					camera.rotation.x -=0.009;
+				//		camera.position.x = object.position.x+100;
+				}
+
+				if(keyboard.pressed("right")) {
+						object.position.y -= 0.099;
+						object.rotation.y +=0.005;
+					//	camera.position.z = object.position.z-100;
+						camera.position.z -= 0.100;
+					//	camera.position.x = object.position.x-100;
+				}
+
+				if(keyboard.pressed("left")) {
+						object.position.y += 0.099;
+						object.rotation.y -=0.005;
+						camera.position.z += 0.100;
+
+				}
+
+				if(keyboard.pressed("q")) {
+						object.rotation.y -=0.009;
+				}
+				if(keyboard.pressed("e")) {
+						object.rotation.y +=0.009;
+				}
 
 
 light.visible= controls1.extraLight;
 
+object2.position.z +=0.01;
+torus12.rotation.z +=0.009;
+
+
 		object.position.z -=0.005;
-		torus11.rotation.z +=0.005;
+		//torus11.rotation.z +=0.005;
 		sphere.rotation.z += 0.01;
 		torus.rotation.z+=speed;
 		clouds.rotation.z += 0.01;
