@@ -8,14 +8,9 @@
 		Detector.addGetWebGLMessage(webglEl);
 		return;
 	}
-
-
-
+	
 	var width  = 1300,
 		height = window.innerHeight;
-
-
-
 
 	// Earth params
 	var radius   = 3,
@@ -32,17 +27,15 @@
 	var renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
 	renderer.setSize(width, height);
 
-
-
 	var light = new THREE.DirectionalLight(0xffffff, 1);
 	light.position.set(5,3,5);
 	light.visible= true;
-//light.intensity =1;
+	//light.intensity =1;
 	scene.add(light);
 
 	var light1 = new THREE.PointLight(0xffffff, 1, 300);
-	+	light1.position.set(0,0,0);
-	 	scene.add(light1);
+	light1.position.set(0,0,0);
+	scene.add(light1);
 
 
     var sphere = createmercury(radius/5, segments);
@@ -168,11 +161,6 @@
     torus_uranus.add(uranus)
     scene.add(torus_uranus);
 
-
-
-
-
-
     var neptune = createneptune(radius/3.2, segments);
     neptune.position.x=starting+107.5;
     neptune.rotation.x =-0.5*Math.PI;
@@ -201,7 +189,6 @@
 	var stars = createStars(240, 100);
 	scene.add(stars);
 
-	//var spaceship = null
 	var mtlLoader = new THREE.MTLLoader();
 	mtlLoader.setPath( 'models/' );
 	mtlLoader.load( 'Shuttle01.mtl', function( materials ) {//	materials.preload();
@@ -210,201 +197,122 @@
 		objLoader.setPath( 'models/' );
 		objLoader.load( 'Shuttle01.obj', function ( object ) {
 
-			object.position.x =starting+90;
-	object.position.y = 60;
+			object.position.x = 171;
+			object.position.y = 57;
+			object.position.z = 95;
 			object.scale.x = 0.008;
 			object.scale.y = 0.008;
 			object.scale.z = 0.008;
-object.rotation.x = 5;
-			var tgeometry11 = new THREE.TorusGeometry(starting+75, 0.001,5,100);
-				var tmaterial11 = new THREE.MeshBasicMaterial( { color: 0x000000 } ); // color of plane
-				var torus11 = new THREE.Mesh( tgeometry11, tmaterial11 );
-			torus11.rotation.x=0.41*Math.PI;
-			torus11.position.x=0;
-torus11.position.z=15;
-
-		//	torus.add(sphere);
-			torus11.add(object);
-			scene.add( torus11 );
-
-			//scene.add( object );
+			object.rotation.y -= 0.65*Math.PI;
+			scene.add(object);
 			var controls1 = new function() {
 
-			this.rotationSpeed = 0.001;
+				this.rotationSpeed = 0.001;
 
-			this.extraLight= false ;
+				this.extraLight= true ;
 			}
 
-		//	window.onload = function() {
 			var gui = new dat.GUI();
 			gui.add(controls1, 'rotationSpeed',0.001,0.02);
 
 			gui.add(controls1, 'extraLight',true,false);
+			controls = new THREE.TrackballControls( camera, renderer.domElement );
+			webglEl.appendChild(renderer.domElement);
+			var keyboard  = new THREEx.KeyboardState();
 
 
-
-			var mtlLoader = new THREE.MTLLoader();
-			mtlLoader.setPath( 'models/' );
-			mtlLoader.load( 'Shuttle01.mtl', function( materials ) {//	materials.preload();
-				var objLoader = new THREE.OBJLoader();
-				objLoader.setMaterials( materials );
-				objLoader.setPath( 'models/' );
-				objLoader.load( 'Shuttle01.obj', function ( object2 ) {
-
-					object2.position.x =starting+40;
-				//	object.position.y = 0.09;
-					object.position.z = 5;
-					object2.scale.x = 0.008;
-					object2.scale.y = 0.008;
-					object2.scale.z = 0.008;
-			object2.rotation.x = 5;
-					var tgeometry12 = new THREE.TorusGeometry(starting+40, 0.001,5,100);
-						var tmaterial12 = new THREE.MeshBasicMaterial( { color: 0x000000 } ); // color of plane
-						var torus12 = new THREE.Mesh( tgeometry12, tmaterial12 );
-					torus12.rotation.x=0.4*Math.PI;
-					torus12.position.x=0;
-
-
-				//	torus.add(sphere);
-					torus12.add(object2);
-					scene.add( torus12 );
-
-
-controls = new THREE.TrackballControls( camera, renderer.domElement );
-
-
-
-
-	webglEl.appendChild(renderer.domElement);
-var keyboard  = new THREEx.KeyboardState();
-
-
-	render();
-scene.add(light);
-	function render() {
-		var speed= controls1.rotationSpeed ; //0.001; //menu
-		controls.update();
-
-		//object2.position.z +=0.01;
-		//torus12.rotation.z +=0.009;
-
-
+			render();
+			scene.add(light);
+			function render() {
+				var speed= controls1.rotationSpeed ; 
+				controls.update();
 
 				if(keyboard.pressed("a")) {
-						object.position.y += 0.099;
-						object.rotation.y -=0.005;
-
-					//	camera.rotation.z = object.rotation.z;
-					//	camera.rotation.y = object.rotation.y;
-					//	camera.rotation.x = object.rotation.x;
-						camera.position.z += 0.100;
-
+					object.position.y += 0.099;
+					object.rotation.y -=0.005;
+					camera.position.z += 0.100;
 				}
 				if(keyboard.pressed("d")) {
-						object.position.y -= 0.099;
-						object.rotation.y +=0.005;
-					//	camera.position.z = object.position.z-100;
-						camera.position.z -= 0.100;
-					//	camera.position.x = object.position.x-100;
+					object.position.y -= 0.099;
+					object.rotation.y +=0.005;
+					camera.position.z -= 0.100;
 				}
 				if(keyboard.pressed("w")) {
-						object.position.z -= 0.1;
-						//camera.position.z = object.position.z+100;
-						camera.position.x -= 0.01;
-					//	camera.position.x = object.position.x-100;
+					object.position.z -= 0.1;
+					camera.position.x -= 0.01;
 				}
 				if(keyboard.pressed("s")) {
-						object.position.z += 0.1;
-					//	camera.position.z = object.position.z+100;
-						camera.position.x += 0.01;
-				//		camera.position.x = object.position.x+100;
+					object.position.z += 0.1;
+					camera.position.x += 0.01;
 				}
 
 				if(keyboard.pressed("up")) {
 					object.position.x -=0.200;
-					//	camera.position.z = object.position.z+100;
 					camera.position.x -= 0.200;
-					camera.rotation.x +=0.009;
-				//		camera.position.x = object.position.x+100;
+					//camera.rotation.x +=0.009;
 				}
 
 				if(keyboard.pressed("down")) {
 					object.position.x +=0.200;
-					//	camera.position.z = object.position.z+100;
 					camera.position.x += 0.200;
-					camera.rotation.x -=0.009;
-				//		camera.position.x = object.position.x+100;
+					//camera.rotation.x -=0.009;
 				}
 
 				if(keyboard.pressed("right")) {
-						object.position.y -= 0.099;
-						object.rotation.y +=0.005;
-					//	camera.position.z = object.position.z-100;
-						camera.position.z -= 0.100;
-					//	camera.position.x = object.position.x-100;
+					object.position.y -= 0.099;
+					object.rotation.y +=0.005;
+					camera.position.z -= 0.100;
 				}
 
 				if(keyboard.pressed("left")) {
-						object.position.y += 0.099;
-						object.rotation.y -=0.005;
-						camera.position.z += 0.100;
-
+					object.position.y += 0.099;
+					object.rotation.y -=0.005;
+					camera.position.z += 0.100;
 				}
 
 				if(keyboard.pressed("q")) {
-						object.rotation.y -=0.009;
+					object.rotation.y -=0.009;
 				}
 				if(keyboard.pressed("e")) {
-						object.rotation.y +=0.009;
+					object.rotation.y +=0.009;
 				}
 
+				light.visible= controls1.extraLight;
+				//object.position.x -=0.5;
+				sphere.rotation.z += 0.01;
+				torus.rotation.z+=speed;
+				clouds.rotation.z += 0.01;
 
-light.visible= controls1.extraLight;
+				venus.rotation.z+=0.01;
+				torus_venus.rotation.z+=speed*0.7;
+				clouds_venus.rotation.z+=0.01;
 
-object2.position.z +=0.01;
-torus12.rotation.z +=0.009;
+				earth.rotation.y-=0.01;
+				torus_earth.rotation.z+=speed*0.6;
+				clouds_earth.rotation.z+=0.01;
 
+				mars.rotation.y-=0.01;
+				torus_mars.rotation.z+=speed*0.5;
 
-		object.position.z -=0.005;
-		//torus11.rotation.z +=0.005;
-		sphere.rotation.z += 0.01;
-		torus.rotation.z+=speed;
-		clouds.rotation.z += 0.01;
+				jupiter.rotation.y-=0.005;
+				torus_jupiter.rotation.z+=speed*0.27;
+				clouds_jupiter.rotation.z+=0.005;
 
-		venus.rotation.z+=0.01;
-		torus_venus.rotation.z+=speed*0.7;
-		clouds_venus.rotation.z+=0.01;
+				saturn.rotation.y+=0.005;
+				torus_saturn.rotation.z+=speed*0.2;
 
-		earth.rotation.y-=0.01;
-		torus_earth.rotation.z+=speed*0.6;
-		clouds_earth.rotation.z+=0.01;
+				uranus.rotation.y+=0.0050;
+				torus_uranus.rotation.z+=speed*0.14;
 
-        mars.rotation.y-=0.01;
-        torus_mars.rotation.z+=speed*0.5;
+				neptune.rotation.y-=0.01;
+				torus_neptune.rotation.z+=speed*0.12;
 
-		jupiter.rotation.y-=0.005;
-		torus_jupiter.rotation.z+=speed*0.27;
-		clouds_jupiter.rotation.z+=0.005;
-
-        saturn.rotation.y+=0.005;
-        torus_saturn.rotation.z+=speed*0.2;
-
-        uranus.rotation.y+=0.0050;
-        torus_uranus.rotation.z+=speed*0.14;
-
-        neptune.rotation.y-=0.01;
-        torus_neptune.rotation.z+=speed*0.12;
-
-		requestAnimationFrame(render);
-		renderer.render(scene, camera  );
-	}
-
-});
-
+				requestAnimationFrame(render);
+				renderer.render(scene, camera  );
+			}
 		});
-});
 
-		});
+	});
 
 
 	function createSphere(radius, segments) {
@@ -499,9 +407,4 @@ torus12.rotation.z +=0.009;
 			})
 		);
 	}
-
-
-
-
-
 }());
