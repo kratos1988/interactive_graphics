@@ -22,8 +22,10 @@
 
 	var camera = new THREE.PerspectiveCamera(45, width / height, 0.01, 1000);
 	camera.position.z = 100;
-	camera.position.y = 60;
+	camera.position.y = 0;
 	camera.position.x = 180;
+	var a = new THREE.Vector3( 1, 0, 0 );
+	camera.lookAt(a);
 	var renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
 	renderer.setSize(width, height);
 
@@ -197,13 +199,13 @@
 		objLoader.setPath( 'models/' );
 		objLoader.load( 'Shuttle01.obj', function ( object ) {
 
-			object.position.x = 171;
-			object.position.y = 57;
-			object.position.z = 93;
+			object.position.x = camera.position.x - 9;
+			object.position.y = camera.position.y - 1.5;
+			object.position.z = camera.position.z - 4.95;
 			object.scale.x = 0.008;
 			object.scale.y = 0.008;
 			object.scale.z = 0.008;
-			object.rotation.y -= 0.65*Math.PI;
+			object.rotation.y -= 0.66*Math.PI;
 			scene.add(object);
 			var controls1 = new function() {
 
@@ -226,70 +228,35 @@
 			function render() {
 				var speed= controls1.rotationSpeed ;
 				controls.update();
-
-				if(keyboard.pressed("a")) {
-					object.position.z += 0.1;
-					camera.position.z += 0.1;
-				camera.up = object;
-				}
-				if(keyboard.pressed("d")) {
-						object.position.z -= 0.1;
-						camera.position.z -= 0.1;
-							camera.up = object;
-				}
-				if(keyboard.pressed("w")) {
-					object.position.y += 0.099;
-				//	object.rotation.y -=0.005;
-					camera.position.y += 0.099;
-					camera.up = object;
-				}
-				if(keyboard.pressed("s")) {
-					object.position.y -= 0.099;
-				//	object.rotation.y +=0.005;
-					camera.position.y -= 0.099;
-					camera.up = object;
-				}
-
+				
 				if(keyboard.pressed("up")) {
 					object.position.x -=0.200;
 					camera.position.x -=0.200;
-						camera.up = object;
-					//camera.rotation.x +=0.009;
 				}
 
 				if(keyboard.pressed("down")) {
 					object.position.x +=0.200;
 					camera.position.x +=0.200;
-						camera.up = object;
-					//camera.rotation.x -=0.009;
 				}
 
 				if(keyboard.pressed("right")) {
-					object.position.z -= 0.1;
-					camera.position.z -= 0.1;
-						camera.up = object;
+					object.rotation.y += 0.1*Math.PI;
+					camera.rotation.y += 0.1*Math.PI;
 				}
 
 				if(keyboard.pressed("left")) {
 					object.position.z += 0.1;
 					camera.position.z += 0.1;
-				camera.up = object;
 				}
 
 				if(keyboard.pressed("q")) {
 					object.rotation.y -=0.1;
-				//	camera.rotation.y -=0.009;
-				//	camera.up = object;
 				}
 				if(keyboard.pressed("e")) {
 					object.rotation.y +=0.1;
-
-				//	camera.rotation.y +=0.009;
-				//	camera.up = object;
 				}
 
 				light.visible= controls1.extraLight;
-				//object.position.x -=0.5;
 				sphere.rotation.z += 0.01;
 				torus.rotation.z+=speed;
 				clouds.rotation.z += 0.01;
@@ -318,10 +285,10 @@
 				neptune.rotation.y-=0.01;
 				torus_neptune.rotation.z+=speed*0.12;
 
-					camera.rotation.set(0,1,0);
+				camera.rotation.set(0,1,0);
 
-			//	camera.lookAt(object);
-	camera.up = sphere;
+				//camera.lookAt(object);
+				camera.up = object;
 				requestAnimationFrame(render);
 				renderer.render(scene, camera  );
 			}
