@@ -11,7 +11,6 @@
 
 	var width  = 1300,
 		height = window.innerHeight;
-	var lookVector = new THREE.Vector3( 1, 0, 0 );
 
 	// Earth params
 	var radius   = 3,
@@ -25,7 +24,8 @@
 	camera.position.z = 100;
 	camera.position.y = 0;
 	camera.position.x = 180;
-	camera.lookAt(lookVector);
+	var a = new THREE.Vector3( 1, 0, 0 );
+	camera.lookAt(a);
 	var renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
 	renderer.setSize(width, height);
 
@@ -241,7 +241,7 @@
 
 				if(keyboard.pressed("right")) {
 					object.rotation.y += 0.1*Math.PI;
-					camera.rotation.y += 0.1 * Math.PI / 180
+					camera.rotation.y += 0.1*Math.PI;
 				}
 
 				if(keyboard.pressed("left")) {
@@ -285,9 +285,10 @@
 				neptune.rotation.y-=0.01;
 				torus_neptune.rotation.z+=speed*0.12;
 
-				//camera.rotation.set(0,1,0);
+				camera.rotation.set(0,1,0);
 
-				//camera.lookAt(lookVector);
+				//camera.lookAt(object);
+				camera.up = object;
 				requestAnimationFrame(render);
 				renderer.render(scene, camera  );
 			}
