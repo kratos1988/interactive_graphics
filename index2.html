@@ -1,0 +1,452 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>Chase Camera (Three.js)</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+</head>
+<body>
+
+<script src="new/three.js"></script>
+<script src="new/Detector.js"></script>
+<script src="new/Stats.js"></script>
+<script src="new/OrbitControls.js"></script>
+<script src="new/THREEx.KeyboardState.js"></script>
+<script src="new/THREEx.FullScreen.js"></script>
+<script src="new/THREEx.WindowResize.js"></script>
+
+<!-- jQuery code to display an information button and box when clicked. -->
+
+<!-- ------------------------------------------------------------ -->
+
+<div id="ThreeJS" style="position: absolute; left:0px; top:0px"></div>
+<script>
+/*
+	Three.js "tutorials by example"
+	Author: Lee Stemkoski
+	Date: July 2013 (three.js v59dev)
+*/
+
+// MAIN
+
+// standard global variables
+var container, scene, camera, renderer, controls, stats;
+var keyboard = new THREEx.KeyboardState();
+var clock = new THREE.Clock();
+// custom global variables
+var cube;
+var radius   = 3;
+var segments = 30;
+var starting = 20;
+var rotation = 6;
+var light, light1;
+var sphere, torus, clouds;
+
+init();
+animate();
+
+// FUNCTIONS 		
+function init() 
+{
+	// SCENE
+	scene = new THREE.Scene();
+	// CAMERA
+	var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
+	var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 20000;
+	camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
+	scene.add(camera);
+	camera.position.set(0,150,400);
+	camera.lookAt(scene.position);	
+	// RENDERER
+	if ( Detector.webgl )
+		renderer = new THREE.WebGLRenderer( {antialias:true} );
+	else
+		renderer = new THREE.CanvasRenderer(); 
+	renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	container = document.getElementById( 'ThreeJS' );
+	container.appendChild( renderer.domElement );
+	// EVENTS
+	THREEx.WindowResize(renderer, camera);
+	THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
+
+	// CONTROLS
+	// MUST REMOVE THIS LINE!!!
+	// controls = ...
+
+	// STATS
+	stats = new Stats();
+	stats.domElement.style.position = 'absolute';
+	stats.domElement.style.bottom = '0px';
+	stats.domElement.style.zIndex = 100;
+	container.appendChild( stats.domElement );
+	light = new THREE.DirectionalLight(0xffffff, 1);
+	light.position.set(5,3,5);
+	light.visible= true;
+	//light.intensity =1;
+	scene.add(light);
+
+	light1 = new THREE.PointLight(0xffffff, 1, 300);
+	light1.position.set(0,0,0);
+	scene.add(light1);
+
+
+     sphere = createmercury(radius/5, segments);
+	sphere.rotation.y = rotation;
+
+    sphere.position.x=starting+2.5;
+	scene.add(sphere)
+ clouds = createClouds(radius/5, segments);
+	clouds.rotation.y = rotation;
+
+	clouds.position.x=starting+2.5;
+	scene.add(clouds);
+	var tgeometry = new THREE.TorusGeometry(starting+2.5, 0.007,5,100);
+    var tmaterial = new THREE.MeshBasicMaterial( { color: 0xFFFFFF } ); // color of plane
+     torus = new THREE.Mesh( tgeometry, tmaterial );
+    torus.rotation.x=0.5*Math.PI;
+    torus.position.x=0;
+    torus.add(sphere);
+    torus.add(clouds);
+    scene.add( torus );
+/*
+    var venus = createvenus(radius/4, segments);
+	venus.rotation.y = rotation;
+
+    venus.position.x=starting+5;
+	var clouds_venus = createClouds(radius/4, segments);
+	clouds_venus.rotation.y = rotation;
+
+
+	clouds_venus.position.x=starting+5;
+	var tgeometry_venus = new THREE.TorusGeometry(starting+5, 0.007,5,100);
+	var torus_venus = new THREE.Mesh(tgeometry_venus, tmaterial );
+    torus_venus.rotation.x=0.5*Math.PI;
+    torus_venus.position.x=0;
+    torus_venus.add(clouds_venus);
+    torus_venus.add(venus)
+    scene.add(torus_venus);
+
+    var earth = createSphere(radius/3.5, segments);
+	earth.rotation.x =-0.5*Math.PI;
+    earth.position.x=starting+7.5;
+	var clouds_earth = createClouds(radius/3.5, segments);
+	clouds_earth.rotation.y = rotation;
+	clouds_earth.position.x=starting+7.5;
+	var tgeometry_earth = new THREE.TorusGeometry(starting+7.5, 0.03,5,100);
+	var torus_earth = new THREE.Mesh(tgeometry_earth, tmaterial );
+    torus_earth.rotation.x=0.5*Math.PI;
+    torus_earth.position.x=0;
+    torus_earth.add(clouds_earth);
+    torus_earth.add(earth)
+    scene.add(torus_earth);
+
+
+    var mars = createmars(radius/3.2, segments);
+    mars.position.x=starting+10.5;
+    mars.rotation.x =-0.5*Math.PI;
+	var tgeometry_mars = new THREE.TorusGeometry(starting+10.5, 0.007,5,100);
+	var torus_mars = new THREE.Mesh(tgeometry_mars, tmaterial );
+    torus_mars.position.x=0;
+    torus_mars.rotation.x=0.5*Math.PI;
+    torus_mars.add(mars)
+    scene.add(torus_mars);
+
+
+    var jupiter = createjupiter(radius, segments);
+	jupiter.rotation.x =-0.5*Math.PI;
+    jupiter.position.x=starting+23;
+	var clouds_jupiter = createClouds(radius*1.002, segments);
+	clouds_jupiter.rotation.y = rotation;
+	clouds_jupiter.position.x=starting+23;
+	var tgeometry_jupiter = new THREE.TorusGeometry(starting+23, 0.007,5,100);
+	var torus_jupiter = new THREE.Mesh(tgeometry_jupiter, tmaterial );
+    torus_jupiter.rotation.x=0.5*Math.PI;
+    torus_jupiter.position.x=0;
+    torus_jupiter.add(clouds_jupiter);
+    torus_jupiter.add(jupiter)
+    scene.add(torus_jupiter);
+
+    var ring_material = new THREE.MeshBasicMaterial({map:THREE.ImageUtils.loadTexture('images/saturn_ring.jpg')});
+    var circleGeometry = new THREE.CircleGeometry( radius, 32 );
+    var circleGeometry2 = new THREE.CircleGeometry( radius, 32 );
+    var circle = new THREE.Mesh(circleGeometry,ring_material );
+    var circle2 = new THREE.Mesh(circleGeometry2,ring_material );
+    circle2.rotation.x=-Math.PI;
+    circle.rotation.z=Math.PI;
+    circle.rotation.x=-Math.PI/2;
+    circle2.rotation.x=Math.PI/2;
+
+    var saturn = createsaturn(radius/1.7, segments);
+    saturn.position.x=starting+40;
+    saturn.rotation.x =-0.5*Math.PI;
+    saturn.add(circle);
+    saturn.add(circle2);
+	var tgeometry_saturn = new THREE.TorusGeometry(starting+40, 0.007,5,100);
+	var torus_saturn = new THREE.Mesh(tgeometry_saturn, tmaterial );
+    torus_saturn.position.x=0;
+    torus_saturn.rotation.x=0.5*Math.PI;
+    saturn.rotation.x=-Math.PI/3;
+    torus_saturn.add(saturn)
+    scene.add(torus_saturn);
+
+
+    var U_ring_material = new THREE.MeshBasicMaterial({map:THREE.ImageUtils.loadTexture('images/uranus_ring.png')});
+    var U_circleGeometry = new THREE.CircleGeometry( radius, 32 );
+    var U_circleGeometry2 = new THREE.CircleGeometry( radius, 32 );
+    var U_circle = new THREE.Mesh(U_circleGeometry,U_ring_material );
+    var U_circle2 = new THREE.Mesh(U_circleGeometry2,U_ring_material );
+    U_circle2.rotation.x=-Math.PI;
+    U_circle.rotation.z=Math.PI;
+    U_circle.rotation.x=-Math.PI/2;
+    U_circle2.rotation.x=Math.PI/2;
+
+    var uranus = createuranus(radius/1.7, segments);
+    uranus.position.x=starting+75;
+    uranus.rotation.x =-0.5*Math.PI;
+    uranus.add(U_circle);
+    uranus.add(U_circle2);
+	var tgeometry_uranus = new THREE.TorusGeometry(starting+75, 0.007,5,100);
+	var torus_uranus = new THREE.Mesh(tgeometry_uranus, tmaterial );
+    torus_uranus.position.x=0;
+    torus_uranus.rotation.x=0.5*Math.PI;
+    uranus.rotation.x=-Math.PI/6;
+    torus_uranus.add(uranus)
+    scene.add(torus_uranus);
+
+    var neptune = createneptune(radius/3.2, segments);
+    neptune.position.x=starting+107.5;
+    neptune.rotation.x =-0.5*Math.PI;
+	var tgeometry_neptune = new THREE.TorusGeometry(starting+107.5, 0.007,5,100);
+	var torus_neptune = new THREE.Mesh(tgeometry_neptune, tmaterial );2
+    torus_neptune.position.x=0;
+    torus_neptune.rotation.x=0.5*Math.PI;
+    torus_neptune.add(neptune)
+    scene.add(torus_neptune);*/
+
+    var textureFlare0 = THREE.ImageUtils.loadTexture("images/lensflare/lensflare88.jpg");
+    var textureFlare3 = THREE.ImageUtils.loadTexture("images/lensflare/lensflare3.png");
+
+    var flareColor = new THREE.Color(0xffaacc);
+    var lensFlare = new THREE.LensFlare(textureFlare0, 400, 0.0, THREE.AdditiveBlending, flareColor);
+
+    lensFlare.add(textureFlare3, 60, 0.6, THREE.AdditiveBlending);
+    lensFlare.add(textureFlare3, 70, 0.7, THREE.AdditiveBlending);
+    lensFlare.add(textureFlare3, 120, 0.9, THREE.AdditiveBlending);
+    lensFlare.add(textureFlare3, 70, 1.0, THREE.AdditiveBlending);
+
+    lensFlare.position.x=0;
+    lensFlare.position.y=0;
+    lensFlare.position.z=0;
+    scene.add(lensFlare);
+	var stars = createStars(240, 100);
+	scene.add(stars);
+
+	// create an array with six textures for a cool cube
+	var materialArray = [];
+	materialArray.push(new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( 'images/xpos.png' ) }));
+	materialArray.push(new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( 'images/xneg.png' ) }));
+	materialArray.push(new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( 'images/ypos.png' ) }));
+	materialArray.push(new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( 'images/yneg.png' ) }));
+	materialArray.push(new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( 'images/zpos.png' ) }));
+	materialArray.push(new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( 'images/zneg.png' ) }));
+	var MovingCubeMat = new THREE.MeshFaceMaterial(materialArray);
+	var MovingCubeGeom = new THREE.CubeGeometry( 5, 5, 5, 1, 1, 1, materialArray );
+	MovingCube = new THREE.Mesh( MovingCubeGeom, MovingCubeMat );
+	MovingCube.position.set(0, 25.1, 0);
+	scene.add( MovingCube );	
+	
+}
+
+var MovingCube;
+
+function animate() 
+{
+    requestAnimationFrame( animate );
+	render();		
+	update();
+}
+
+function update()
+{
+	var delta = clock.getDelta(); // seconds.
+	var moveDistance = 200 * delta; // 200 pixels per second
+	var rotateAngle = Math.PI / 2 * delta;   // pi/2 radians (90 degrees) per second
+	
+	// local transformations
+
+	// move forwards/backwards/left/right
+	if ( keyboard.pressed("W") )
+		MovingCube.translateZ( -moveDistance );
+	if ( keyboard.pressed("S") )
+		MovingCube.translateZ(  moveDistance );
+	if ( keyboard.pressed("Q") )
+		MovingCube.translateX( -moveDistance );
+	if ( keyboard.pressed("E") )
+		MovingCube.translateX(  moveDistance );	
+
+	// rotate left/right/up/down
+	var rotation_matrix = new THREE.Matrix4().identity();
+	if ( keyboard.pressed("A") )
+		MovingCube.rotateOnAxis( new THREE.Vector3(0,1,0), rotateAngle);
+	if ( keyboard.pressed("D") )
+		MovingCube.rotateOnAxis( new THREE.Vector3(0,1,0), -rotateAngle);
+	if ( keyboard.pressed("R") )
+		MovingCube.rotateOnAxis( new THREE.Vector3(1,0,0), rotateAngle);
+	if ( keyboard.pressed("F") )
+		MovingCube.rotateOnAxis( new THREE.Vector3(1,0,0), -rotateAngle);
+	
+	if ( keyboard.pressed("Z") )
+	{
+		MovingCube.position.set(0,25.1,0);
+		MovingCube.rotation.set(0,0,0);
+	}
+	
+	var relativeCameraOffset = new THREE.Vector3(0,50,200);
+
+	var cameraOffset = relativeCameraOffset.applyMatrix4( MovingCube.matrixWorld );
+
+	camera.position.x = cameraOffset.x;
+	camera.position.y = cameraOffset.y;
+	camera.position.z = cameraOffset.z;
+	camera.lookAt( MovingCube.position );
+	
+	//camera.updateMatrix();
+	//camera.updateProjectionMatrix();
+			
+	stats.update();
+
+
+//light.visible= controls1.extraLight;
+	sphere.rotation.z += 0.01;
+	torus.rotation.z+=0.01;;
+	clouds.rotation.z += 0.01;
+}
+	/*venus.rotation.z+=0.01;
+	torus_venus.rotation.z+=speed*0.7;
+	clouds_venus.rotation.z+=0.01;
+
+earth.rotation.y-=0.01;
+	torus_earth.rotation.z+=speed*0.6;
+	clouds_earth.rotation.z+=0.01;
+
+	mars.rotation.y-=0.01;
+	torus_mars.rotation.z+=speed*0.5;
+
+	jupiter.rotation.y-=0.005;
+	torus_jupiter.rotation.z+=speed*0.27;
+	clouds_jupiter.rotation.z+=0.005;
+
+	saturn.rotation.y+=0.005;
+	torus_saturn.rotation.z+=speed*0.2;
+
+	uranus.rotation.y+=0.0050;
+	torus_uranus.rotation.z+=speed*0.14;
+
+	neptune.rotation.y-=0.01;
+	torus_neptune.rotation.z+=speed*0.12;
+        }
+*/
+
+	function createSphere(radius, segments) {
+		return new THREE.Mesh(
+			new THREE.SphereGeometry(radius, segments, segments),
+			new THREE.MeshPhongMaterial({
+				map:         THREE.ImageUtils.loadTexture('images/2_no_clouds_4k.jpg'),
+					bumpMap:     THREE.ImageUtils.loadTexture('images/elev_bump_4k.jpg'),
+					bumpScale:   0.005,
+					specularMap: THREE.ImageUtils.loadTexture('images/water_4k.png'),
+					specular:    new THREE.Color('grey')
+			})
+		);
+	}
+	function createmercury(radius, segments) {
+		return new THREE.Mesh(
+			new THREE.SphereGeometry(radius, segments, segments),
+			new THREE.MeshPhongMaterial({
+				map:         THREE.ImageUtils.loadTexture('images/mercury.jpg'),
+			})
+		);
+	}
+    function createvenus(radius, segments) {
+		return new THREE.Mesh(
+			new THREE.SphereGeometry(radius, segments, segments),
+			new THREE.MeshPhongMaterial({
+				map:         THREE.ImageUtils.loadTexture('images/venus.jpg'),
+			})
+		);
+	}
+	function createjupiter(radius, segments) {
+		return new THREE.Mesh(
+			new THREE.SphereGeometry(radius, segments, segments),
+			new THREE.MeshPhongMaterial({
+				map:         THREE.ImageUtils.loadTexture('images/jupiter.jpg'),
+
+			})
+		);
+	}
+	function createmars(radius, segments) {
+		return new THREE.Mesh(
+			new THREE.SphereGeometry(radius, segments, segments),
+			new THREE.MeshPhongMaterial({
+				map:         THREE.ImageUtils.loadTexture('images/mars.jpg'),
+			})
+		);
+	}
+	function createsaturn(radius, segments) {
+		return new THREE.Mesh(
+			new THREE.SphereGeometry(radius, segments, segments),
+			new THREE.MeshPhongMaterial({
+				map:         THREE.ImageUtils.loadTexture('images/saturn.jpg'),
+			})
+		);
+	}
+	function createuranus(radius, segments) {
+		return new THREE.Mesh(
+			new THREE.SphereGeometry(radius, segments, segments),
+			new THREE.MeshPhongMaterial({
+				map:         THREE.ImageUtils.loadTexture('images/uranus.jpg'),
+				specularMap: THREE.ImageUtils.loadTexture('images/glow.jpg'),
+				specular:    new THREE.Color('grey')
+			})
+		);
+	}
+    function createneptune(radius, segments) {
+		return new THREE.Mesh(
+			new THREE.SphereGeometry(radius, segments, segments),
+			new THREE.MeshPhongMaterial({
+				map:         THREE.ImageUtils.loadTexture('images/new_neptune.jpg'),
+				specularMap: THREE.ImageUtils.loadTexture('images/glow.jpg'),
+				specular:    new THREE.Color('grey')
+			})
+		);
+	}
+
+	function createClouds(radius, segments) {
+		return new THREE.Mesh(
+			new THREE.SphereGeometry(radius + 0.005, segments, segments),
+			new THREE.MeshPhongMaterial({
+				map:         THREE.ImageUtils.loadTexture('images/fair_clouds_4k.png'),
+				transparent: true
+			})
+		);
+	}
+	function createStars(radius, segments) {
+		return new THREE.Mesh(
+			new THREE.SphereGeometry(radius, segments, segments),
+			new THREE.MeshBasicMaterial({
+				map:  THREE.ImageUtils.loadTexture('images/stars_milkyway.jpg'),
+				side: THREE.BackSide
+			})
+		);
+	}
+
+function render() 
+{
+	renderer.render( scene, camera );
+}
+
+</script>
+
+</body>
+</html>
+
