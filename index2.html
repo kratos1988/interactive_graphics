@@ -13,6 +13,7 @@
 <script src="js/dat.gui.js"></script>
 <script src="js/Stats.js"></script>
 <script src="js/OrbitControls.js"></script>
+<script src="js/OBJLoader.js"></script>
 <script src="js/THREEx.KeyboardState.js"></script>
 <script src="js/THREEx.FullScreen.js"></script>
 <script src="js/THREEx.WindowResize.js"></script>
@@ -50,6 +51,56 @@ var tmaterial = new THREE.MeshBasicMaterial( { color: 0xFFFFFF } ); // color of 
 
 init();
 animate();
+
+var obj;
+var head;
+var frontP;
+ 
+function loadModel() {
+     var textLoader = new THREE.TextureLoader();
+ 
+     var diffuseTexture = textLoader.load("./resources/R2D2_Diffuse-Reflection-Combined-small.png");
+     var bumpTexture = textLoader.load("./resources/R2D2_Normal-small.png");
+     var emissiveTexture = textLoader.load("./resources/R2D2_Illumination-small.png");
+     var specularTexture = textLoader.load("./resources/R2D2_Specular-small.png");
+ 
+     var loader = new THREE.OBJLoader();
+     loader.load("./resources/R2D2_Standing.obj", function(model) {
+         model.children.forEach(function(child) {
+             var material = child.material;
+ 
+             // basic texture
+             material.map = diffuseTexture;
+ 
+             // bumps
+             material.bumpMap = bumpTexture;
+             material.bumpScale = 0.3;
+ 
+             // glow
+             material.emissive = new THREE.Color(0xffffff);
+             material.emissiveMap = emissiveTexture;
+ 
+             // specular
+             material.specularMap = specularTexture;
+ 
+             // enable shadows
+             child.receiveShadow = true;
+             child.castShadow = true;
+ 
+ 
+             if (child.name === "Head") head = child;
+             if (child.name === "Front_Projector") frontP = child;
+         });
+ 
+         model.scale.x = 0.15;
+         model.scale.y = 0.15;
+         model.scale.z = 0.15;
+ 
+         model.position.set(0, 25.5, 0);
+         MovingCube = model;
+         scene.add(MovingCube);
+     })
+ }
 
 // FUNCTIONS 		
 function init() {
@@ -131,7 +182,7 @@ function init() {
 	scene.add(stars);
 
 	// create an array with six textures for a cool cube
-	var materialArray = [];
+	/*var materialArray = [];
 	materialArray.push(new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( 'images/xpos.png' ) }));
 	materialArray.push(new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( 'images/xneg.png' ) }));
 	materialArray.push(new THREE.MeshBasicMaterial( { map: THREE.ImageUtils.loadTexture( 'images/ypos.png' ) }));
@@ -142,7 +193,8 @@ function init() {
 	var MovingCubeGeom = new THREE.CubeGeometry( 5, 5, 5, 1, 1, 1, materialArray );
 	MovingCube = new THREE.Mesh( MovingCubeGeom, MovingCubeMat );
 	MovingCube.position.set(0, 25.1, 0);
-	scene.add( MovingCube );
+	scene.add( MovingCube );*/
+	loadModel();
 	
 }
 
