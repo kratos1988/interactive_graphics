@@ -24,8 +24,7 @@
 	camera.position.z = 100;
 	camera.position.y = 0;
 	camera.position.x = 180;
-	var a = new THREE.Vector3( 1, 0, 0 );
-	camera.lookAt(a);
+	var lookDir = new THREE.Vector3( 0, 1, 0 );
 	var renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
 	renderer.setSize(width, height);
 
@@ -218,7 +217,7 @@
 			gui.add(controls1, 'rotationSpeed',0.001,0.02);
 
 			gui.add(controls1, 'extraLight',true,false);
-			controls = new THREE.TrackballControls( camera, renderer.domElement );
+			//controls = new THREE.TrackballControls( camera, renderer.domElement );
 			webglEl.appendChild(renderer.domElement);
 			var keyboard  = new THREEx.KeyboardState();
 
@@ -227,7 +226,7 @@
 			scene.add(light);
 			function render() {
 				var speed= controls1.rotationSpeed ;
-				controls.update();
+				//controls.update();
 				
 				if(keyboard.pressed("up")) {
 					object.position.x -=0.200;
@@ -240,13 +239,14 @@
 				}
 
 				if(keyboard.pressed("right")) {
-					object.rotation.y += 0.1*Math.PI;
-					camera.rotation.y += 0.1*Math.PI;
+					lookDir.y -= 0.01*Math.PI;
+					object.rotation.y = -0.01*Math.PI;
+					camera.matrixWorld.makeRotationY( -0.01*Math.PI);
+					camera.matrixWorldNeedsUpdate = true;
 				}
 
 				if(keyboard.pressed("left")) {
-					object.position.z += 0.1;
-					camera.position.z += 0.1;
+					lookDir.y += 0.01*Math.PI;
 				}
 
 				if(keyboard.pressed("q")) {
@@ -285,10 +285,11 @@
 				neptune.rotation.y-=0.01;
 				torus_neptune.rotation.z+=speed*0.12;
 
-				camera.rotation.set(0,1,0);
+				camera.rotation.set(lookDir.x, lookDir.y, lookDir.z);
 
 				//camera.lookAt(object);
-				camera.up = object;
+				camera.up = lookDir.y;
+				//camera.lookAt(object);
 				requestAnimationFrame(render);
 				renderer.render(scene, camera  );
 			}
