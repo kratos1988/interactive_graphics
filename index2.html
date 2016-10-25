@@ -44,6 +44,7 @@ var saturn, torus_saturn;
 var uranus, torus_uranus, clouds_uranus;
 var neptune, torus_neptune, neptune;
 
+var MovingCube;
 var speed;
 var tmaterial = new THREE.MeshBasicMaterial( { color: 0xFFFFFF } ); // color of plane
 
@@ -141,11 +142,10 @@ function init() {
 	var MovingCubeGeom = new THREE.CubeGeometry( 5, 5, 5, 1, 1, 1, materialArray );
 	MovingCube = new THREE.Mesh( MovingCubeGeom, MovingCubeMat );
 	MovingCube.position.set(0, 25.1, 0);
-	scene.add( MovingCube );	
+	scene.add( MovingCube );
 	
 }
 
-var MovingCube;
 
 function animate() {
     requestAnimationFrame(animate);
