@@ -14,6 +14,7 @@
 <script src="js/Stats.js"></script>
 <script src="js/OrbitControls.js"></script>
 <script src="js/OBJLoader.js"></script>
+<script src="js/MTLLoader.js"></script>
 <script src="js/THREEx.KeyboardState.js"></script>
 <script src="js/THREEx.FullScreen.js"></script>
 <script src="js/THREEx.WindowResize.js"></script>
@@ -57,19 +58,24 @@ var head;
 var frontP;
  
 function loadModel() {
- 
-     var loader = new THREE.OBJLoader();
-     loader.load("./models/Shuttle01.obj", function(model) {
-     
-         model.scale.x = 0.015;
-         model.scale.y = 0.015;
-         model.scale.z = 0.015;
-		//model.rotateOnAxis( new THREE.Vector3(0,1,0), Math.PI);
-         model.position.set(0, 25.5, 0);
+	var mtlLoader = new THREE.MTLLoader();
+	mtlLoader.setPath( 'models/' );
+	mtlLoader.load( 'Shuttle01.mtl', function( materials ) {
+	materials.preload();
+	var objLoader = new THREE.OBJLoader();
+			objLoader.setMaterials( materials );
+			objLoader.load("./models/Shuttle01.obj",function ( model ) {
 		 
-         MovingCube = model;
-         scene.add(MovingCube);
-     })
+			model.scale.x = 0.015;
+			model.scale.y = 0.015;
+			model.scale.z = 0.015;
+			//model.rotateOnAxis( new THREE.Vector3(0,1,0), Math.PI);
+			model.position.set(0, 25.5, 0);
+			 
+			MovingCube = model;
+			scene.add(MovingCube);
+		});
+	});
  }
 
 // FUNCTIONS 		
@@ -204,7 +210,7 @@ function update() {
 		MovingCube.rotateOnAxis( new THREE.Vector3(1,0,0), -rotateAngle);
 	
 	
-	var relativeCameraOffset = new THREE.Vector3(0,20,-700);
+	var relativeCameraOffset = new THREE.Vector3(0,300,-700);
 
 	var cameraOffset = relativeCameraOffset.applyMatrix4( MovingCube.matrixWorld );
 
