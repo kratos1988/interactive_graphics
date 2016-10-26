@@ -57,46 +57,16 @@ var head;
 var frontP;
  
 function loadModel() {
-     var textLoader = new THREE.TextureLoader();
- 
-     var diffuseTexture = textLoader.load("./resources/R2D2_Diffuse-Reflection-Combined-small.png");
-     var bumpTexture = textLoader.load("./resources/R2D2_Normal-small.png");
-     var emissiveTexture = textLoader.load("./resources/R2D2_Illumination-small.png");
-     var specularTexture = textLoader.load("./resources/R2D2_Specular-small.png");
  
      var loader = new THREE.OBJLoader();
-     loader.load("./resources/R2D2_Standing.obj", function(model) {
-         model.children.forEach(function(child) {
-             var material = child.material;
- 
-             // basic texture
-             material.map = diffuseTexture;
- 
-             // bumps
-             material.bumpMap = bumpTexture;
-             material.bumpScale = 0.3;
- 
-             // glow
-             material.emissive = new THREE.Color(0xffffff);
-             material.emissiveMap = emissiveTexture;
- 
-             // specular
-             material.specularMap = specularTexture;
- 
-             // enable shadows
-             child.receiveShadow = true;
-             child.castShadow = true;
- 
- 
-             if (child.name === "Head") head = child;
-             if (child.name === "Front_Projector") frontP = child;
-         });
- 
-         model.scale.x = 0.15;
-         model.scale.y = 0.15;
-         model.scale.z = 0.15;
- 
+     loader.load("./models/Shuttle01.obj", function(model) {
+     
+         model.scale.x = 0.015;
+         model.scale.y = 0.015;
+         model.scale.z = 0.015;
+		//model.rotateOnAxis( new THREE.Vector3(0,1,0), Math.PI);
          model.position.set(0, 25.5, 0);
+		 
          MovingCube = model;
          scene.add(MovingCube);
      })
@@ -211,12 +181,12 @@ function update() {
 	var rotateAngle = Math.PI / 2 * delta;   // pi/2 radians (90 degrees) per second
 	
 	// local transformations
-
+	if (MovingCube !== undefined) {
 	// move forwards/backwards/left/right
 	if ( keyboard.pressed("W") )
-		MovingCube.translateZ( -moveDistance );
+		MovingCube.translateZ( moveDistance );
 	if ( keyboard.pressed("S") )
-		MovingCube.translateZ(  moveDistance );
+		MovingCube.translateZ( -moveDistance );
 	if ( keyboard.pressed("Q") )
 		MovingCube.translateX( -moveDistance );
 	if ( keyboard.pressed("E") )
@@ -233,23 +203,19 @@ function update() {
 	if ( keyboard.pressed("F") )
 		MovingCube.rotateOnAxis( new THREE.Vector3(1,0,0), -rotateAngle);
 	
-	if ( keyboard.pressed("Z") )
-	{
-		MovingCube.position.set(0,25.1,0);
-		MovingCube.rotation.set(0,0,0);
-	}
 	
-	var relativeCameraOffset = new THREE.Vector3(0,50,200);
+	var relativeCameraOffset = new THREE.Vector3(0,20,-700);
 
 	var cameraOffset = relativeCameraOffset.applyMatrix4( MovingCube.matrixWorld );
 
 	camera.position.x = cameraOffset.x;
 	camera.position.y = cameraOffset.y;
 	camera.position.z = cameraOffset.z;
-	camera.lookAt( MovingCube.position );
-	
+	camera.lookAt( MovingCube.position);
 	//camera.updateMatrix();
 	//camera.updateProjectionMatrix();
+	}
+	
 			
 	stats.update();
 
