@@ -6,6 +6,7 @@
 </head>
 <body>
 
+<input type=button onClick="location.href='index.html'">
 <script src="js/three.js"></script>
 <script src="js/CreatePlanets.js"></script>
 <script src="js/SetPlanets.js"></script>
@@ -47,7 +48,7 @@ var uranus, torus_uranus, clouds_uranus;
 var neptune, torus_neptune, neptune;
 
 var MovingCube;
-var speed;
+var speed = 0.01;
 var tmaterial = new THREE.MeshBasicMaterial( { color: 0xFFFFFF } ); // color of plane
 
 init();
@@ -102,13 +103,10 @@ function init() {
 	THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
 
 	controls1 = new function() {
-		this.rotationSpeed = 0.001;
-		this.extraLight= true ;
+		this.changeView= true ;
 	}
 	var gui = new dat.GUI();
-	gui.add(controls1, 'rotationSpeed',0.001,0.02);
-	gui.add(controls1, 'extraLight',true,false);
-	speed = controls1.rotationSpeed;
+	gui.add(controls1, 'changeView',true,false);
 	
 	// CONTROLS
 	// MUST REMOVE THIS LINE!!!
@@ -154,7 +152,7 @@ function init() {
     lensFlare.position.y=0;
     lensFlare.position.z=0;
     scene.add(lensFlare);
-	var stars = createStars(240, 100);
+	var stars = createStars(1000, 100);
 	scene.add(stars);
 
 	// create an array with six textures for a cool cube
@@ -182,6 +180,10 @@ function animate() {
 }
 
 function update() {
+if (controls1.changeView == false) {
+	document.location.href = 'index.html';
+}
+
 	var delta = clock.getDelta(); // seconds.
 	var moveDistance = 200 * delta; // 200 pixels per second
 	var rotateAngle = Math.PI / 2 * delta;   // pi/2 radians (90 degrees) per second
@@ -225,7 +227,7 @@ function update() {
 			
 	//stats.update();
 
-	light.visible = controls1.extraLight;
+	
 	mercury.rotation.z += 0.01;
 	torus_mercury.rotation.z += speed;
 	clouds_mercury.rotation.z += 0.01;
