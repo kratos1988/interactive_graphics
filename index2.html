@@ -25,7 +25,7 @@
 // MAIN
 
 // standard global variables
-var container, scene, camera, renderer, controls, stats;
+var container, scene, camera, renderer, controls, controls1, stats;
 var keyboard = new THREEx.KeyboardState();
 var clock = new THREE.Clock();
 // custom global variables
@@ -91,7 +91,7 @@ function init() {
 	camera.lookAt(scene.position);	
 	// RENDERER
 	if ( Detector.webgl )
-		renderer = new THREE.WebGLRenderer( {antialias:true} );
+		renderer = new THREE.WebGLRenderer( {antialias:true, alpha:true} );
 	else
 		renderer = new THREE.CanvasRenderer(); 
 	renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
@@ -101,7 +101,7 @@ function init() {
 	THREEx.WindowResize(renderer, camera);
 	THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
 
-	var controls1 = new function() {
+	controls1 = new function() {
 		this.rotationSpeed = 0.001;
 		this.extraLight= true ;
 	}
@@ -115,14 +115,14 @@ function init() {
 	// controls = ...
 
 	// STATS
-	stats = new Stats();
+	/*stats = new Stats();
 	stats.domElement.style.position = 'absolute';
 	stats.domElement.style.bottom = '0px';
 	stats.domElement.style.zIndex = 100;
-	container.appendChild( stats.domElement );
+	container.appendChild( stats.domElement );*/
 	light = new THREE.DirectionalLight(0xffffff, 1);
 	light.position.set(5,3,5);
-	light.visible= true;
+	light.visible = true;
 	//light.intensity =1;
 	scene.add(light);
 
@@ -188,46 +188,46 @@ function update() {
 	
 	// local transformations
 	if (MovingCube !== undefined) {
-	// move forwards/backwards/left/right
-	if ( keyboard.pressed("W") )
-		MovingCube.translateZ( moveDistance );
-	if ( keyboard.pressed("S") )
-		MovingCube.translateZ( -moveDistance );
-	if ( keyboard.pressed("Q") )
-		MovingCube.translateX( -moveDistance );
-	if ( keyboard.pressed("E") )
-		MovingCube.translateX(  moveDistance );	
+		// move forwards/backwards/left/right
+		if ( keyboard.pressed("W") )
+			MovingCube.translateZ( moveDistance );
+		if ( keyboard.pressed("S") )
+			MovingCube.translateZ( -moveDistance );
+		if ( keyboard.pressed("Q") )
+			MovingCube.translateX( -moveDistance );
+		if ( keyboard.pressed("E") )
+			MovingCube.translateX(  moveDistance );	
 
-	// rotate left/right/up/down
-	var rotation_matrix = new THREE.Matrix4().identity();
-	if ( keyboard.pressed("A") )
-		MovingCube.rotateOnAxis( new THREE.Vector3(0,1,0), rotateAngle);
-	if ( keyboard.pressed("D") )
-		MovingCube.rotateOnAxis( new THREE.Vector3(0,1,0), -rotateAngle);
-	if ( keyboard.pressed("R") )
-		MovingCube.rotateOnAxis( new THREE.Vector3(1,0,0), rotateAngle);
-	if ( keyboard.pressed("F") )
-		MovingCube.rotateOnAxis( new THREE.Vector3(1,0,0), -rotateAngle);
-	
-	
-	var relativeCameraOffset = new THREE.Vector3(0,300,-1600);
+		// rotate left/right/up/down
+		var rotation_matrix = new THREE.Matrix4().identity();
+		if ( keyboard.pressed("A") )
+			MovingCube.rotateOnAxis( new THREE.Vector3(0,1,0), rotateAngle);
+		if ( keyboard.pressed("D") )
+			MovingCube.rotateOnAxis( new THREE.Vector3(0,1,0), -rotateAngle);
+		if ( keyboard.pressed("R") )
+			MovingCube.rotateOnAxis( new THREE.Vector3(1,0,0), rotateAngle);
+		if ( keyboard.pressed("F") )
+			MovingCube.rotateOnAxis( new THREE.Vector3(1,0,0), -rotateAngle);
+		
+		
+		var relativeCameraOffset = new THREE.Vector3(0,300,-1600);
 
-	var cameraOffset = relativeCameraOffset.applyMatrix4( MovingCube.matrixWorld );
+		var cameraOffset = relativeCameraOffset.applyMatrix4( MovingCube.matrixWorld );
 
-	camera.position.x = cameraOffset.x;
-	camera.position.y = cameraOffset.y;
-	camera.position.z = cameraOffset.z;
-	camera.lookAt( MovingCube.position);
-	//camera.updateMatrix();
-	//camera.updateProjectionMatrix();
+		camera.position.x = cameraOffset.x;
+		camera.position.y = cameraOffset.y;
+		camera.position.z = cameraOffset.z;
+		camera.lookAt( MovingCube.position);
+		//camera.updateMatrix();
+		//camera.updateProjectionMatrix();
 	}
 	
 			
-	stats.update();
+	//stats.update();
 
-//light.visible= controls1.extraLight;
+	light.visible = controls1.extraLight;
 	mercury.rotation.z += 0.01;
-	torus_mercury.rotation.z+=0.01;;
+	torus_mercury.rotation.z += speed;
 	clouds_mercury.rotation.z += 0.01;
 	venus.rotation.z+=0.01;
 	torus_venus.rotation.z+=speed*0.7;
