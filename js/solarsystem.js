@@ -1,5 +1,4 @@
 
-
 (function () {
 
 	var webglEl = document.getElementById('webgl');
@@ -22,32 +21,38 @@
 
 	var camera = new THREE.PerspectiveCamera(45, width / height, 0.01, 1000);
 	camera.position.z = 100;
-	camera.position.y = 0;
+	camera.position.y = 60;
 	camera.position.x = 180;
-	var a = new THREE.Vector3( 1, 0, 0 );
-	camera.lookAt(a);
 	var renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
 	renderer.setSize(width, height);
+	controls1 = new function() {
+			this.changeView= true ;
+			this.extraLight = true;
+		}
+	var gui = new dat.GUI();
+	gui.add(controls1, 'changeView',true,false);
+	gui.add(controls1, 'extraLight',true,false);
+	// general light //
+	//scene.add(new THREE.AmbientLight(0x333333));
 
-	var light = new THREE.DirectionalLight(0xffffff, 1);
-	light.position.set(5,3,5);
-	light.visible= true;
-	//light.intensity =1;
-	scene.add(light);
-
-	var light1 = new THREE.PointLight(0xffffff, 1, 300);
-	light1.position.set(0,0,0);
+	var light1 = new THREE.DirectionalLight(0xffffff, 1);
+	light1.position.set(5,3,5);
+	light1.visible = true;
 	scene.add(light1);
+	var light = new THREE.PointLight(0xffffff, 1, 300);
+	light.position.set(0,0,0);
+	scene.add(light);
+	
 
-
+		var speed=0.01;
     var sphere = createmercury(radius/5, segments);
 	sphere.rotation.y = rotation;
-
+	//sphere.position.set(0,45,0);
     sphere.position.x=starting+2.5;
 	scene.add(sphere)
 	var clouds = createClouds(radius/5, segments);
 	clouds.rotation.y = rotation;
-
+//	clouds.position.set(0,45,0);
 	clouds.position.x=starting+2.5;
 	scene.add(clouds);
 	var tgeometry = new THREE.TorusGeometry(starting+2.5, 0.007,5,100);
@@ -61,12 +66,12 @@
 
     var venus = createvenus(radius/4, segments);
 	venus.rotation.y = rotation;
-
+//	venus.position.set(0,10,0);
     venus.position.x=starting+5;
 	var clouds_venus = createClouds(radius/4, segments);
 	clouds_venus.rotation.y = rotation;
 
-
+	//clouds_venus.position.set(0,10,0);
 	clouds_venus.position.x=starting+5;
 	var tgeometry_venus = new THREE.TorusGeometry(starting+5, 0.007,5,100);
 	var torus_venus = new THREE.Mesh(tgeometry_venus, tmaterial );
@@ -163,6 +168,7 @@
     torus_uranus.add(uranus)
     scene.add(torus_uranus);
 
+
     var neptune = createneptune(radius/3.2, segments);
     neptune.position.x=starting+107.5;
     neptune.rotation.x =-0.5*Math.PI;
@@ -191,6 +197,7 @@
 	var stars = createStars(240, 100);
 	scene.add(stars);
 
+	//var spaceship = null
 	var mtlLoader = new THREE.MTLLoader();
 	mtlLoader.setPath( 'models/' );
 	mtlLoader.load( 'Shuttle01.mtl', function( materials ) {//	materials.preload();
@@ -199,101 +206,113 @@
 		objLoader.setPath( 'models/' );
 		objLoader.load( 'Shuttle01.obj', function ( object ) {
 
-			object.position.x = camera.position.x - 9;
-			object.position.y = camera.position.y - 1.5;
-			object.position.z = camera.position.z - 4.95;
+			object.position.x =starting+75;
+		//	object.position.y = 0.09;
+			//object.position.z = 5;
 			object.scale.x = 0.008;
 			object.scale.y = 0.008;
 			object.scale.z = 0.008;
-			object.rotation.y -= 0.66*Math.PI;
-			scene.add(object);
-			var controls1 = new function() {
+object.rotation.x = 5;
+			var tgeometry11 = new THREE.TorusGeometry(starting+75, 0.001,5,100);
+				var tmaterial11 = new THREE.MeshBasicMaterial( { color: 0x000000 } ); // color of plane
+				var torus11 = new THREE.Mesh( tgeometry11, tmaterial11 );
+			torus11.rotation.x=0.41*Math.PI;
+			torus11.position.x=0;
+torus11.position.z=15;
 
-				this.rotationSpeed = 0.001;
+		//	torus.add(sphere);
+			torus11.add(object);
+			scene.add( torus11 );
 
-				this.extraLight= true ;
-			}
-
-			var gui = new dat.GUI();
-			gui.add(controls1, 'rotationSpeed',0.001,0.02);
-			gui.add(controls1, 'extraLight',true,false);
-			controls = new THREE.TrackballControls( camera, renderer.domElement );
-			webglEl.appendChild(renderer.domElement);
-			var keyboard  = new THREEx.KeyboardState();
+			//scene.add( object );
 
 
-			render();
-			scene.add(light);
-			function render() {
-				var speed= controls1.rotationSpeed ;
-				controls.update();
-				
-				if(keyboard.pressed("up")) {
-					object.position.x -=0.200;
-					camera.position.x -=0.200;
-				}
 
-				if(keyboard.pressed("down")) {
-					object.position.x +=0.200;
-					camera.position.x +=0.200;
-				}
 
-				if(keyboard.pressed("right")) {
-					object.rotation.y += 0.1*Math.PI;
-					camera.rotation.y += 0.1*Math.PI;
-				}
+			//var spaceship = null
+			var mtlLoader = new THREE.MTLLoader();
+			mtlLoader.setPath( 'models/' );
+			mtlLoader.load( 'Shuttle01.mtl', function( materials ) {//	materials.preload();
+				var objLoader = new THREE.OBJLoader();
+				objLoader.setMaterials( materials );
+				objLoader.setPath( 'models/' );
+				objLoader.load( 'Shuttle01.obj', function ( object2 ) {
 
-				if(keyboard.pressed("left")) {
-					object.position.z += 0.1;
-					camera.position.z += 0.1;
-				}
+					object2.position.x =starting+40;
+				//	object.position.y = 0.09;
+					object.position.z = 5;
+					object2.scale.x = 0.008;
+					object2.scale.y = 0.008;
+					object2.scale.z = 0.008;
+			object2.rotation.x = 5;
+					var tgeometry12 = new THREE.TorusGeometry(starting+40, 0.001,5,100);
+						var tmaterial12 = new THREE.MeshBasicMaterial( { color: 0x000000 } ); // color of plane
+						var torus12 = new THREE.Mesh( tgeometry12, tmaterial12 );
+					torus12.rotation.x=0.4*Math.PI;
+					torus12.position.x=0;
 
-				if(keyboard.pressed("q")) {
-					object.rotation.y -=0.1;
-				}
-				if(keyboard.pressed("e")) {
-					object.rotation.y +=0.1;
-				}
 
-				light.visible= controls1.extraLight;
-				sphere.rotation.z += 0.01;
-				torus.rotation.z+=speed;
-				clouds.rotation.z += 0.01;
+				//	torus.add(sphere);
+					torus12.add(object2);
+					scene.add( torus12 );
 
-				venus.rotation.z+=0.01;
-				torus_venus.rotation.z+=speed*0.7;
-				clouds_venus.rotation.z+=0.01;
+					//scene.add( object );
 
-				earth.rotation.y-=0.01;
-				torus_earth.rotation.z+=speed*0.6;
-				clouds_earth.rotation.z+=0.01;
+	var controls = new THREE.TrackballControls(camera);
 
-				mars.rotation.y-=0.01;
-				torus_mars.rotation.z+=speed*0.5;
+	webglEl.appendChild(renderer.domElement);
 
-				jupiter.rotation.y-=0.005;
-				torus_jupiter.rotation.z+=speed*0.27;
-				clouds_jupiter.rotation.z+=0.005;
+	render();
+	function render() {
+		if (controls1.changeView == false) {
+			
+	document.location.href = 'index2.html';
+		}
+		light1.visible = controls1.extraLight;
+		controls.update();
 
-				saturn.rotation.y+=0.005;
-				torus_saturn.rotation.z+=speed*0.2;
+		object2.position.z +=0.01;
+		torus12.rotation.z +=0.009;
 
-				uranus.rotation.y+=0.0050;
-				torus_uranus.rotation.z+=speed*0.14;
+		object.position.z -=0.005;
+		torus11.rotation.z +=0.005;
+		sphere.rotation.z += 0.01;
+		torus.rotation.z+=speed;
+		clouds.rotation.z += 0.01;
+	
+		venus.rotation.z+=0.01;		
+		torus_venus.rotation.z+=speed*0.7;
+		clouds_venus.rotation.z+=0.01;
+		
+		earth.rotation.y-=0.01;
+		torus_earth.rotation.z+=speed*0.6;
+		clouds_earth.rotation.z+=0.01;
+		
+        mars.rotation.y-=0.01;
+        torus_mars.rotation.z+=speed*0.5;
 
-				neptune.rotation.y-=0.01;
-				torus_neptune.rotation.z+=speed*0.12;
+		jupiter.rotation.y-=0.005;
+		torus_jupiter.rotation.z+=speed*0.27;
+		clouds_jupiter.rotation.z+=0.005;
 
-				camera.rotation.set(0,1,0);
+        saturn.rotation.y+=0.005;
+        torus_saturn.rotation.z+=speed*0.2;
 
-				//camera.lookAt(object);
-				camera.up = object;
-				requestAnimationFrame(render);
-				renderer.render(scene, camera  );
-			}
+        uranus.rotation.y+=0.0050;
+        torus_uranus.rotation.z+=speed*0.14;
+
+        neptune.rotation.y-=0.01;
+        torus_neptune.rotation.z+=speed*0.12;
+
+		requestAnimationFrame(render);
+		renderer.render(scene, camera);
+	}
+});
+
 		});
+});
 
-	});
+		});
 
 
 	function createSphere(radius, segments) {
@@ -388,4 +407,5 @@
 			})
 		);
 	}
+
 }());
