@@ -27,10 +27,12 @@
 	renderer.setSize(width, height);
 	controls1 = new function() {
 			this.changeView= true ;
+			this.earthView= true ;
 			this.extraLight = true;
 		}
 	var gui = new dat.GUI();
 	gui.add(controls1, 'changeView',true,false);
+	gui.add(controls1, 'earthView',true,false);
 	gui.add(controls1, 'extraLight',true,false);
 	// general light //
 	//scene.add(new THREE.AmbientLight(0x333333));
@@ -265,8 +267,10 @@ torus11.position.z=15;
 	render();
 	function render() {
 		if (controls1.changeView == false) {
-			
-	document.location.href = 'index2.html';
+			document.location.href = 'index2.html';
+		}
+		if (controls1.earthView == false) {
+			document.location.href = 'index1.html';
 		}
 		light1.visible = controls1.extraLight;
 		controls.update();

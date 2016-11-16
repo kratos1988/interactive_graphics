@@ -102,9 +102,11 @@ function init() {
 
 	controls1 = new function() {
 		this.changeView= true ;
+		this.earthView= true ;
 	}
 	var gui = new dat.GUI();
 	gui.add(controls1, 'changeView',true,false);
+	gui.add(controls1, 'earthView',true,false);
 	
 	// CONTROLS
 	// MUST REMOVE THIS LINE!!!
@@ -178,9 +180,12 @@ function animate() {
 }
 
 function update() {
-if (controls1.changeView == false) {
-	document.location.href = 'index.html';
-}
+	if (controls1.changeView == false) {
+		document.location.href = 'index.html';
+	}
+		if (controls1.earthView == false) {
+		document.location.href = 'index1.html';
+	}
 
 	var delta = clock.getDelta(); // seconds.
 	var moveDistance = 200 * delta; // 200 pixels per second

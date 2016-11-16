@@ -1,6 +1,7 @@
 
 (function () {
 
+	var controls1;
 	var webglEl = document.getElementById('webgl');
 
 	if (!Detector.webgl) {
@@ -26,7 +27,13 @@
 
 	var renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
 	renderer.setSize(width, height);
-
+	controls1 = new function() {
+		this.spaceshipView= true ;
+		this.solarSystemView= true ;
+	}
+	var gui = new dat.GUI();
+	gui.add(controls1, 'spaceshipView',true,false);
+	gui.add(controls1, 'solarSystemView',true,false);
 	// general light //
 	scene.add(new THREE.AmbientLight(0x333333));
 
@@ -75,6 +82,12 @@
 
 	render();
 	function render() {
+		if (controls1.spaceshipView == false) {
+			document.location.href = 'index2.html';
+		}
+		if (controls1.solarSystemView == false) {
+			document.location.href = 'index.html';
+		}
 		var speed=0.001;
 		controls.update();
 		sphere.rotation.z += 0.01;
@@ -89,6 +102,7 @@
 		requestAnimationFrame(render);
 		renderer.render(scene, camera);
 	}
+
 	function createSphere(radius, segments) {
 		return new THREE.Mesh(
 			new THREE.SphereGeometry(radius, segments, segments),
