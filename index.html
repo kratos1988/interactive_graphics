@@ -21,18 +21,225 @@
 <body>
 
 
-    <div id="webgl">
+    <div id="ThreeJS" />
     <script src="js/three.js"></script>
+	<script src="js/CreatePlanets.js"></script>
+	<script src="js/SetPlanets.js"></script>
     <script src="js/Detector.js"></script>
     <script src="js/TrackballControls.js"></script>
 	<script src="js/OBJLoader.js"></script>
 	<script src="js/MTLLoader.js"></script>
-<script src="js/dat.gui.js"></script>
+	<script src="js/dat.gui.js"></script>
  	<script src="js/THREEx.KeyboardState.js"></script>
-    <script src="js/solarsystem.js"></script>
+    <script src="js/THREEx.FullScreen.js"></script>
+	<script src="js/THREEx.WindowResize.js"></script>
     <script src="js/dat.gui.js"></script>
 
-    </div>
+<script>
+
+// MAIN
+
+// standard global variables
+var container, scene, camera, renderer, controls, controls1, stats;
+var keyboard = new THREEx.KeyboardState();
+var clock = new THREE.Clock();
+// custom global variables
+var cube;
+var radius   = 3;
+var segments = 30;
+var starting = 20;
+var rotation = 6;
+
+var light, light1;
+
+var mercury, torus_mercury, clouds_mercury;
+var venus, torus_venus, clouds_venus;
+var earth, torus_earth, clouds_earth;
+var mars, torus_mars;
+var jupiter, torus_jupiter, clouds_jupiter;
+var saturn, torus_saturn;
+var uranus, torus_uranus, clouds_uranus;
+var neptune, torus_neptune, neptune;
+
+var MovingCube;
+var speed = 0.01;
+var tmaterial = new THREE.MeshBasicMaterial( { color: 0xFFFFFF } ); // color of plane
+
+init();
+animate();
+
+var object, torus11;
+var head;
+var frontP;
+ 
+function loadModel() {
+	var mtlLoader = new THREE.MTLLoader();
+	mtlLoader.setPath( 'models/' );
+	mtlLoader.load( 'Shuttle01.mtl', function( materials ) {//	materials.preload();
+		var objLoader = new THREE.OBJLoader();
+		objLoader.setMaterials( materials );
+		objLoader.setPath( 'models/' );
+		objLoader.load( 'Shuttle01.obj', function ( spaceship ) {
+
+			spaceship.position.x =starting+75;
+		//	object.position.y = 0.09;
+			//object.position.z = 5;
+			spaceship.scale.x = 0.008;
+			spaceship.scale.y = 0.008;
+			spaceship.scale.z = 0.008;
+			spaceship.rotation.x = 5;
+			var tgeometry11 = new THREE.TorusGeometry(starting+75, 0.001,5,100);
+				var tmaterial11 = new THREE.MeshBasicMaterial( { color: 0x000000 } ); // color of plane
+				var torus = new THREE.Mesh( tgeometry11, tmaterial11 );
+			torus.rotation.x=0.41*Math.PI;
+			torus.position.x=0;
+			torus.position.z=15;
+
+			torus.add(spaceship);
+			scene.add( torus );
+			object = spaceship;
+			torus11 = torus;
+		});
+	});
+ }
+
+// FUNCTIONS 		
+function init() {
+	// SCENE
+	scene = new THREE.Scene();
+	// CAMERA
+	var SCREEN_WIDTH = window.innerWidth, SCREEN_HEIGHT = window.innerHeight;
+	var VIEW_ANGLE = 45, ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT, NEAR = 0.1, FAR = 1000;
+	camera = new THREE.PerspectiveCamera( VIEW_ANGLE, ASPECT, NEAR, FAR);
+	scene.add(camera);
+	camera.position.set(100,60,180);
+	camera.lookAt(scene.position);	
+	// RENDERER
+	if ( Detector.webgl )
+		renderer = new THREE.WebGLRenderer( {antialias:true, alpha:true} );
+	else
+		renderer = new THREE.CanvasRenderer(); 
+	renderer.setSize(SCREEN_WIDTH, SCREEN_HEIGHT);
+	container = document.getElementById( 'ThreeJS' );
+	container.appendChild( renderer.domElement );
+	// EVENTS
+	THREEx.WindowResize(renderer, camera);
+	THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
+
+	controls1 = new function() {
+			this.changeView= true ;
+			this.earthView= true ;
+			this.extraLight = true;
+		}
+	var gui = new dat.GUI();
+	gui.add(controls1, 'changeView',true,false);
+	gui.add(controls1, 'earthView',true,false);
+	gui.add(controls1, 'extraLight',true,false);
+	
+	light = new THREE.DirectionalLight(0xffffff, 1);
+	light.position.set(5,3,5);
+	light.visible = true;
+	
+	scene.add(light);
+
+	light1 = new THREE.PointLight(0xffffff, 1, 300);
+	light1.position.set(0,0,0);
+	scene.add(light1);
+
+	setMercury();
+	setVenus();
+	setEarth();
+	setMars();
+	setJupiter();
+	setSaturn();
+	setUranus();
+	setNeptune();
+
+    var textureFlare0 = THREE.ImageUtils.loadTexture("images/lensflare/lensflare88.jpg");
+    var textureFlare3 = THREE.ImageUtils.loadTexture("images/lensflare/lensflare3.png");
+
+    var flareColor = new THREE.Color(0xffaacc);
+    var lensFlare = new THREE.LensFlare(textureFlare0, 400, 0.0, THREE.AdditiveBlending, flareColor);
+
+    lensFlare.add(textureFlare3, 60, 0.6, THREE.AdditiveBlending);
+    lensFlare.add(textureFlare3, 70, 0.7, THREE.AdditiveBlending);
+    lensFlare.add(textureFlare3, 120, 0.9, THREE.AdditiveBlending);
+    lensFlare.add(textureFlare3, 70, 1.0, THREE.AdditiveBlending);
+
+    lensFlare.position.x=0;
+    lensFlare.position.y=0;
+    lensFlare.position.z=0;
+    scene.add(lensFlare);
+	var stars = createStars(1000, 100);
+	scene.add(stars);
+	loadModel();
+	controls = new THREE.TrackballControls(camera);
+
+	container.appendChild(renderer.domElement);
+	
+	
+}
+
+
+function animate() {
+    requestAnimationFrame(animate);
+	render();		
+	update();
+}
+
+function update() {
+	if (controls1.changeView == false) {
+		document.location.href = 'index2.html';
+	}
+		if (controls1.earthView == false) {
+		document.location.href = 'index1.html';
+	}
+
+	light1.visible = controls1.extraLight;
+	controls.update();
+	if (object !== undefined && torus11 !== undefined) {
+		object.position.z -=0.005;
+		torus11.rotation.z +=0.005;
+	}
+	mercury.rotation.z += 0.01;
+	torus_mercury.rotation.z+=speed;
+	clouds_mercury.rotation.z += 0.01;
+	
+	venus.rotation.z+=0.01;		
+	torus_venus.rotation.z+=speed*0.7;
+	clouds_venus.rotation.z+=0.01;
+	
+	earth.rotation.y-=0.01;
+	torus_earth.rotation.z+=speed*0.6;
+	clouds_earth.rotation.z+=0.01;
+		
+    mars.rotation.y-=0.01;
+    torus_mars.rotation.z+=speed*0.5;
+
+	jupiter.rotation.y-=0.005;
+	torus_jupiter.rotation.z+=speed*0.27;
+	clouds_jupiter.rotation.z+=0.005;
+
+    saturn.rotation.y+=0.005;
+    torus_saturn.rotation.z+=speed*0.2;
+
+    uranus.rotation.y+=0.0050;
+    torus_uranus.rotation.z+=speed*0.14;
+
+    neptune.rotation.y-=0.01;
+    torus_neptune.rotation.z+=speed*0.12;
+
+	requestAnimationFrame(render);
+	renderer.render(scene, camera);
+
+}
+
+
+function render() {
+	renderer.render( scene, camera );
+}
+
+</script>
 
     
 </body>
