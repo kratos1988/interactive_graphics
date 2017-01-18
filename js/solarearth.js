@@ -27,13 +27,14 @@
 
 	var renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
 	renderer.setSize(width, height);
+	var changeViewButton = { SystemView:function(){document.location.href = 'index.html';}};
+	var spaceshipViewButton = { SpaceshipVIew:function(){document.location.href = 'index2.html';}};
 	controls1 = new function() {
-		this.spaceshipView= true ;
-		this.solarSystemView= true ;
+		this.extraLight = true ;
 	}
 	var gui = new dat.GUI();
-	gui.add(controls1, 'spaceshipView',true,false);
-	gui.add(controls1, 'solarSystemView',true,false);
+	gui.add(changeViewButton, 'SystemView').name('System Tour');
+	gui.add(spaceshipViewButton, 'SpaceshipVIew').name('Move The Ship');
 	// general light //
 	scene.add(new THREE.AmbientLight(0x333333));
 
@@ -82,12 +83,6 @@
 
 	render();
 	function render() {
-		if (controls1.spaceshipView == false) {
-			document.location.href = 'index2.html';
-		}
-		if (controls1.solarSystemView == false) {
-			document.location.href = 'index.html';
-		}
 		var speed=0.001;
 		controls.update();
 		sphere.rotation.z += 0.01;

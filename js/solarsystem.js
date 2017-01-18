@@ -25,15 +25,15 @@
 	camera.position.x = 180;
 	var renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
 	renderer.setSize(width, height);
+	var spaceshipViewButton = { SpaceshipView:function(){document.location.href = 'index2.html';}};
+	var earthViewButton = { EarthView:function(){document.location.href = 'index1.html';}};
 	controls1 = new function() {
-			this.changeView= true ;
-			this.earthView= true ;
-			this.extraLight = true;
-		}
+		this.extraLight = true ;
+	}
 	var gui = new dat.GUI();
-	gui.add(controls1, 'changeView',true,false);
-	gui.add(controls1, 'earthView',true,false);
-	gui.add(controls1, 'extraLight',true,false);
+	gui.add(spaceshipViewButton, 'SpaceshipView').name('Move The Ship');
+	gui.add(earthViewButton, 'EarthView').name('The Amazing Earth');
+	gui.add(controls1, 'extraLight', true, false).name('More Light!');
 	// general light //
 	//scene.add(new THREE.AmbientLight(0x333333));
 
@@ -266,15 +266,9 @@ torus11.position.z=15;
 
 	render();
 	function render() {
-		if (controls1.changeView == false) {
-			document.location.href = 'index2.html';
-		}
-		if (controls1.earthView == false) {
-			document.location.href = 'index1.html';
-		}
-		light1.visible = controls1.extraLight;
-		controls.update();
 
+		controls.update();
+		light1.visible = controls1.extraLight;
 		object2.position.z +=0.01;
 		torus12.rotation.z +=0.009;
 

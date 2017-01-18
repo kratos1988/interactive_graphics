@@ -6,7 +6,6 @@
 </head>
 <body>
 
-<input type=button onClick="location.href='index.html'">
 <script src="js/three.js"></script>
 <script src="js/CreatePlanets.js"></script>
 <script src="js/SetPlanets.js"></script>
@@ -99,34 +98,25 @@ function init() {
 	// EVENTS
 	THREEx.WindowResize(renderer, camera);
 	THREEx.FullScreen.bindKey({ charCode : 'm'.charCodeAt(0) });
-
+	var changeViewButton = { SystemView:function(){document.location.href = 'index.html';}};
+	var earthViewButton = { EarthView:function(){document.location.href = 'index1.html';}};
 	controls1 = new function() {
-		this.changeView= true ;
-		this.earthView= true ;
+		this.extraLight = true ;
 	}
 	var gui = new dat.GUI();
-	gui.add(controls1, 'changeView',true,false);
-	gui.add(controls1, 'earthView',true,false);
+	gui.add(changeViewButton, 'SystemView').name('System Tour');
+	gui.add(earthViewButton, 'EarthView').name('The Amazing Earth');
+	gui.add(controls1, 'extraLight', true, false).name('More Light!');
 	
-	// CONTROLS
-	// MUST REMOVE THIS LINE!!!
-	// controls = ...
-
-	// STATS
-	/*stats = new Stats();
-	stats.domElement.style.position = 'absolute';
-	stats.domElement.style.bottom = '0px';
-	stats.domElement.style.zIndex = 100;
-	container.appendChild( stats.domElement );*/
-	light = new THREE.DirectionalLight(0xffffff, 1);
-	light.position.set(5,3,5);
-	light.visible = true;
+	light1 = new THREE.DirectionalLight(0xffffff, 1);
+	light1.position.set(5,3,5);
+	light1.visible = true;
 	//light.intensity =1;
-	scene.add(light);
-
-	light1 = new THREE.PointLight(0xffffff, 1, 300);
-	light1.position.set(0,0,0);
 	scene.add(light1);
+
+	light = new THREE.PointLight(0xffffff, 1, 300);
+	light.position.set(0,0,0);
+	scene.add(light);
 
 	setMercury();
 	setVenus();
@@ -180,17 +170,17 @@ function animate() {
 }
 
 function update() {
-	if (controls1.changeView == false) {
+	if (controls1.changeView == true) {
 		document.location.href = 'index.html';
 	}
-		if (controls1.earthView == false) {
+		if (controls1.earthView == true) {
 		document.location.href = 'index1.html';
 	}
 
 	var delta = clock.getDelta(); // seconds.
 	var moveDistance = 200 * delta; // 200 pixels per second
 	var rotateAngle = Math.PI / 2 * delta;   // pi/2 radians (90 degrees) per second
-	
+	light1.visible = controls1.extraLight;
 	// local transformations
 	if (MovingCube !== undefined) {
 		// move forwards/backwards/left/right
