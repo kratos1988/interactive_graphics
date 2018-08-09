@@ -1,4 +1,3 @@
- This repository contains the software of the final project for Interactive Graphics exam.
-
- <a href="" target="_blank"><img src="http://i67.tinypic.com/2mi1g6t.jpg" border="0" alt=""></a>
- <a href="" target="_blank"><img src="http://i65.tinypic.com/240xd2f.jpg" border="0" alt=""></a>
+ This repository contains the software of the final project for Interactive Graphics exam with professor Marco Schaerf.
+ 
+ The project is made in Javascript and shows a space shuttle wandering around the solar space. The user moves the shuttle with  the keyboard and turn in every direction the view for a better fun :)
